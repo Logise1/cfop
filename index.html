@@ -648,8 +648,12 @@
                 await speakPromise(`Este es un tutorial para ${name}.`);
 
                 // 2. Poner en posición (setup)
-                // Usamos `experimentalSetAlg` para aplicar el setup sin animarlo
-                player.experimentalSetAlg(setup);
+                // Usamos `experimentalApplyAlg` para aplicar el setup sin animarlo
+                
+                // --- ¡¡¡AQUÍ ESTÁ LA CORRECCIÓN!!! ---
+                player.experimentalApplyAlg(setup);
+                // --- ANTES ERA: player.experimentalSetAlg(setup); ---
+                
                 
                 // 3. Decir "Vamos"
                 await speakPromise("Vamos a hacerlo.");
