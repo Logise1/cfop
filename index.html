@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"> <!-- Corregido de UTF-M a UTF-8 -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrenador de Algoritmos CFOP</title>
     
@@ -12,6 +12,13 @@
     <script type="module" src="https://cdn.cubing.net/v0/js/cubing/twisty"></script>
     
     <style>
+        /* Fondo con gradiente sutil para un look más premium */
+        body {
+            background-color: #0a0e1a; /* Un azul casi negro */
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
         /* Estilo para que el twisty-player se vea nítido */
         twisty-player {
             width: 100%;
@@ -19,40 +26,102 @@
             aspect-ratio: 1 / 1;
             border-radius: 0.5rem; /* rounded-md */
         }
+        
         /* Clases de utilidad para el JS */
         .tab-btn-base {
-             padding-top: 0.5rem; padding-bottom: 0.5rem;
-             padding-left: 1.5rem; padding-right: 1.5rem;
+             padding: 0.75rem 1.5rem; /* Más padding */
              border-radius: 0.5rem; /* rounded-lg */
              font-weight: 600; /* font-semibold */
-             transition: all 0.2s;
+             transition: all 0.2s ease-in-out;
              outline: none;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             gap: 0.5rem;
+             border: 2px solid transparent; /* Borde para el estado focus */
+             /* Desactivar botón */
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
         }
+        .tab-btn-base:focus-visible {
+            border-color: #38bdf8; /* Borde cyan en focus */
+        }
+        
         .tab-btn-active {
-            background-color: #06b6d4; /* bg-cyan-500 */
+            background-image: linear-gradient(to right, #06b6d4, #3b82f6); /* bg-gradient-to-r from-cyan-500 to-blue-500 */
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.3), 0 4px 6px -4px rgba(6, 182, 212, 0.2); /* Sombra de color */
+        }
+        .tab-btn-active:disabled {
+             background-image: none;
+             background-color: #374151; /* bg-gray-700 */
+             color: #6b7280; /* text-gray-500 */
         }
         .tab-btn-inactive {
-            background-color: #374151; /* bg-gray-700 */
+            background-color: #1f2937; /* bg-gray-800 */
             color: #d1d5db; /* text-gray-300 */
         }
-        .tab-btn-inactive:hover {
-            background-color: #4b5563; /* hover:bg-gray-600 */
+        .tab-btn-inactive:hover:not(:disabled) {
+            background-color: #374151; /* hover:bg-gray-700 */
+        }
+        
+        /* Estilo para el botón de tutorial */
+        .btn-tutorial {
+            background-color: #7c3aed; /* bg-purple-600 */
+            color: white;
+        }
+        .btn-tutorial:hover:not(:disabled) {
+            background-color: #9333ea; /* hover:bg-purple-500 */
+        }
+
+        /* Animación para el modal */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-scale-in {
+            animation: scaleIn 0.3s ease-out;
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans antialiased min-h-screen">
 
-    <!-- 1. MODAL DE CONFIGURACIÓN INICIAL -->
-    <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl max-w-md w-full text-center">
-            <h2 class="text-3xl font-bold text-cyan-400 mb-4">¡Bienvenido/a!</h2>
-            <p class="text-lg text-gray-300 mb-8">Vamos a configurar tu entrenamiento. ¿Con qué grupo de algoritmos quieres empezar?</p>
-            <div class="flex flex-col gap-4">
-                <button id="btn-start-f2l" data-order="f2l,oll,pll" class="setup-btn tab-btn-base tab-btn-active">Empezar con F2L</button>
-                <button id="btn-start-oll" data-order="oll,pll,f2l" class="setup-btn tab-btn-base tab-btn-inactive">Empezar con OLL</button>
-                <button id="btn-start-pll" data-order="pll,f2l,oll" class="setup-btn tab-btn-base tab-btn-inactive">Empezar con PLL</button>
+    <!-- 1. MODAL DE CONFIGURACIÓN INICIAL (Rediseñado) -->
+    <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50 hidden modal-fade-in">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center border border-gray-700 modal-scale-in">
+            
+            <!-- Visor en el modal para "enganchar" -->
+            <div class="w-48 h-48 mx-auto mb-6">
+                 <twisty-player
+                    alg="R U R' U' R' F R F'"
+                    setup="y'"
+                    control-panel="none"
+                    visualization="2D"
+                    experimental-stickering="PLL"
+                    background="none"
+                ></twisty-player>
+            </div>
+            
+            <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4">¡Es hora de ser más rápido!</h2>
+            <p class="text-lg text-gray-300 mb-8">¡Bienvenido, Speedcuber! Elige tu punto de partida y destruye tus récords. ¿Con qué set empezamos?</p>
+            
+            <!-- Botones mejorados -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button data-order="f2l,oll,pll" class="setup-btn tab-btn-base tab-btn-active">
+                    F2L
+                </button>
+                <button data-order="oll,pll,f2l" class="setup-btn tab-btn-base tab-btn-inactive">
+                    OLL
+                </button>
+                <button data-order="pll,f2l,oll" class="setup-btn tab-btn-base tab-btn-inactive">
+                    PLL
+                </button>
             </div>
         </div>
     </div>
@@ -60,21 +129,29 @@
     <!-- 2. CONTENIDO PRINCIPAL DE LA APP -->
     <div class="container max-w-7xl mx-auto p-4 sm:p-8">
         
-        <!-- Título y Navegación Principal -->
+        <!-- Título y Navegación Principal (Con iconos) -->
         <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-cyan-400">Entrenador CFOP Diario</h1>
-            <nav class="flex justify-center gap-4 mt-6">
-                <button id="nav-daily" class="tab-btn-base">Entrenador Diario</button>
-                <button id="nav-browse" class="tab-btn-base">Explorar Todo</button>
+            <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                Entrenador CFOP
+            </h1>
+            <nav class="flex justify-center gap-4 mt-8">
+                <button id="nav-daily" class="tab-btn-base"></button> <!-- Contenido inyectado por JS -->
+                <button id="nav-browse" class="tab-btn-base"></button> <!-- Contenido inyectado por JS -->
             </nav>
         </header>
 
-        <!-- 3. VISTA: ENTRENADOR DIARIO -->
+        <!-- 3. VISTA: ENTRENADOR DIARIO (Rediseñada con Dashboard) -->
         <main id="daily-view">
-            <h2 class="text-3xl font-semibold text-center text-gray-200 mb-8">Tus algoritmos de hoy</h2>
+            
+            <!-- (NUEVO) Dashboard de Progreso -->
+            <section id="dashboard-stats" class="mb-12 p-8 bg-gray-800 rounded-2xl shadow-xl border border-gray-700">
+                <!-- El contenido del dashboard se inyectará aquí -->
+            </section>
+
+            <h2 class="text-3xl font-semibold text-center text-gray-200 mb-8">Tu Misión de Hoy</h2>
             <div id="daily-algs-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 <!-- Los 2 algoritmos del día se cargarán aquí -->
-                <p id="daily-loading" class="text-center text-xl text-gray-400 col-span-full">Cargando algoritmos...</p>
+                <p id="daily-loading" class="text-center text-xl text-gray-400 col-span-full">Cargando tu misión...</p>
             </div>
         </main>
 
@@ -89,7 +166,6 @@
 
             <!-- Contenedor para los Algoritmos (Explorar) -->
             <div id="browse-content-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- El contenido se cargará aquí vía JavaScript -->
                 <p id="browse-loading" class="text-center text-2xl font-semibold text-gray-400 col-span-full">Selecciona una categoría para empezar.</p>
             </div>
         </main>
@@ -101,12 +177,40 @@
         // --- CONSTANTES ---
         const JSON_URL = 'https://logise1.github.io/cfop/cfop.json';
         const LS_KEYS = {
-            SETUP: 'cfop_user_setup_v2',
-            ORDER: 'cfop_learn_order_v2',
-            LEARNED: 'cfop_learned_algs_v2',
-            DAILY: 'cfop_daily_algs_v2',
-            LAST_VISIT: 'cfop_last_visit_date_v2'
+            SETUP: 'cfop_user_setup_v3', // v3 para la nueva UI
+            ORDER: 'cfop_learn_order_v3',
+            LEARNED: 'cfop_learned_algs_v3',
+            DAILY: 'cfop_daily_algs_v3',
+            LAST_VISIT: 'cfop_last_visit_date_v3'
         };
+        const TTS_URL = 'https://api.streamelements.com/kappa/v2/speech?voice=Penelope&text=';
+        
+        // (NUEVO) Mapa de traducción de movimientos
+        const MOVE_MAP = {
+            "R": "erre", "R'": "erre prima", "R2": "erre dos", "R2'": "erre dos prima",
+            "U": "u", "U'": "u prima", "U2": "u dos", "U2'": "u dos prima",
+            "F": "efeh", "F'": "efeh prima", "F2": "efeh dos", "F2'": "efeh dos prima",
+            "L": "eleh", "L'": "eleh prima", "L2": "eleh dos", "L2'": "eleh dos prima",
+            "D": "deh", "D'": "deh prima", "D2": "deh dos", "D2'": "deh dos prima",
+            "B": "beh", "B'": "beh prima", "B2": "beh dos", "B2'": "beh dos prima",
+            "M": "emeh", "M'": "emeh prima", "M2": "emeh dos", "M2'": "emeh dos prima",
+            "x": "equis", "x'": "equis prima", "x2": "equis dos", "x2'": "equis dos prima",
+            "y": "igriega", "y'": "igriega prima", "y2": "igriega dos", "y2'": "igriega dos prima",
+            "z": "seta", "z'": "seta prima", "z2": "seta dos", "z2'": "seta dos prima",
+            "r": "erre ancha", "r'": "erre ancha prima", "r2": "erre ancha dos", "r2'": "erre ancha dos prima",
+            "l": "eleh ancha", "l'": "eleh ancha prima", "l2": "eleh ancha dos", "l2'": "eleh ancha dos prima",
+            "u": "u ancha", "u'": "u ancha prima", "u2": "u ancha dos", "u2'": "u ancha dos prima",
+            "d": "deh ancha", "d'": "deh ancha prima", "d2": "deh ancha dos", "d2'": "deh ancha dos prima",
+            "f": "efeh ancha", "f'": "efeh ancha prima", "f2": "efeh ancha dos", "f2'": "efeh ancha dos prima",
+            "b": "beh ancha", "b'": "beh ancha prima", "b2": "beh ancha dos", "b2'": "beh ancha dos prima"
+        };
+        
+        // Iconos SVG para los botones (de Heroicons)
+        const ICON_CALENDAR = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg> <span>Diario</span>`;
+        const ICON_GRID = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg> <span>Explorar</span>`;
+        const ICON_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg> <span>¡Aprendido!</span>`;
+        const ICON_KNOW_IT = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> ¡Ya lo sé!`;
+        const ICON_TUTORIAL = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg> <span>Tutorial con Voz</span>`;
 
         // --- REFERENCIAS DEL DOM ---
         const setupModal = document.getElementById('setup-modal');
@@ -114,6 +218,7 @@
         const browseView = document.getElementById('browse-view');
         const navDaily = document.getElementById('nav-daily');
         const navBrowse = document.getElementById('nav-browse');
+        const dashboardStats = document.getElementById('dashboard-stats'); 
         const dailyAlgsContainer = document.getElementById('daily-algs-container');
         const dailyLoading = document.getElementById('daily-loading');
         const browseContentContainer = document.getElementById('browse-content-container');
@@ -123,12 +228,41 @@
 
         // --- ESTADO DE LA APLICACIÓN ---
         let allData = {};
+        let totalAlgs = 0; 
         let userLearnOrder = [];
         let learnedAlgs = [];
         let currentBrowseCategory = 'f2l';
+        let isSpeaking = false; // Flag para evitar múltiples audios
 
         // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', fetchData);
+        
+        // Inyectar iconos en botones de nav
+        navDaily.innerHTML = ICON_CALENDAR;
+        navBrowse.innerHTML = ICON_GRID;
+
+        /**
+         * (NUEVA FUNCIÓN)
+         * Genera el string hablado a partir de la notación de alg.
+         */
+        function generateSpokenAlg(algString) {
+            if (!algString) return "";
+            try {
+                const moves = algString.trim().split(' ');
+                const spokenMoves = moves.map(move => {
+                    if (MOVE_MAP[move]) {
+                        return MOVE_MAP[move];
+                    }
+                    // Si no se encuentra, devuelve el movimiento tal cual (puede ser un error en el alg)
+                    console.warn(`Movimiento no encontrado en MOVE_MAP: ${move}`);
+                    return move;
+                });
+                return spokenMoves.join(',');
+            } catch (error) {
+                console.error(`Error al generar alg hablado para: ${algString}`, error);
+                return ""; // Devuelve vacío si falla
+            }
+        }
 
         /**
          * 1. Carga los datos del JSON y luego inicia la app
@@ -138,6 +272,9 @@
                 const response = await fetch(JSON_URL);
                 if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
                 allData = await response.json();
+                
+                // Calcular total de algoritmos
+                totalAlgs = (allData.f2l?.length || 0) + (allData.oll?.length || 0) + (allData.pll?.length || 0);
                 
                 // Una vez cargados los datos, revisa la configuración del usuario
                 checkUserSetup();
@@ -155,11 +292,11 @@
         function checkUserSetup() {
             const setupDone = localStorage.getItem(LS_KEYS.SETUP) === 'true';
 
-            // Añadir listeners de navegación principal
+            // Listeners de navegación principal
             navDaily.addEventListener('click', showDailyView);
             navBrowse.addEventListener('click', showBrowseView);
 
-            // Añadir listeners a las pestañas de "Explorar"
+            // Listeners de "Explorar"
             browseTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     currentBrowseCategory = tab.dataset.category;
@@ -167,6 +304,11 @@
                     renderBrowseCategory(currentBrowseCategory);
                 });
             });
+            
+            // Listeners de delegación de eventos para botones de tutorial
+            dailyAlgsContainer.addEventListener('click', handleCardClick);
+            browseContentContainer.addEventListener('click', handleCardClick);
+
 
             if (setupDone) {
                 // Cargar datos de localStorage
@@ -179,7 +321,13 @@
                 // Mostrar modal de configuración
                 setupModal.classList.remove('hidden');
                 setupButtons.forEach(btn => {
-                    btn.addEventListener('click', () => handleSetup(btn.dataset.order));
+                    btn.addEventListener('click', (e) => {
+                        // Resaltar botón seleccionado en el modal
+                        setupButtons.forEach(b => b.classList.replace('tab-btn-active', 'tab-btn-inactive'));
+                        e.currentTarget.classList.replace('tab-btn-inactive', 'tab-btn-active');
+                        // Usar un pequeño delay para que vea el click antes de cerrar
+                        setTimeout(() => handleSetup(btn.dataset.order), 200);
+                    });
                 });
             }
         }
@@ -209,6 +357,7 @@
             navBrowse.classList.add('tab-btn-inactive');
             navBrowse.classList.remove('tab-btn-active');
             
+            updateDashboard(); // Actualizar stats
             loadDailyAlgs(); // Cargar los algoritmos del día
         }
 
@@ -224,11 +373,59 @@
             updateBrowseTabs();
             renderBrowseCategory(currentBrowseCategory);
         }
+        
+        // --- LÓGICA DEL DASHBOARD ---
+
+        /**
+         * 4. Actualiza el dashboard con el progreso del usuario
+         */
+        function updateDashboard() {
+            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
+            const totalLearned = learnedAlgs.length;
+            const overallPercent = totalAlgs > 0 ? (totalLearned / totalAlgs) * 100 : 0;
+
+            // Encontrar el set actual
+            let currentCategoryKey = userLearnOrder.find(cat => allData[cat]?.some(alg => !learnedAlgs.includes(alg.id))) 
+                                    || userLearnOrder[userLearnOrder.length - 1];
+            
+            const currentCategory = allData[currentCategoryKey] || [];
+            const learnedInCurrent = currentCategory.filter(alg => learnedAlgs.includes(alg.id)).length || 0;
+            const totalInCurrent = currentCategory.length || 0;
+            const currentPercent = totalInCurrent > 0 ? (learnedInCurrent / totalInCurrent) * 100 : 0;
+
+            let dashboardHTML = `
+                <h2 class="text-3xl font-bold text-center mb-6 text-white">Tu Progreso</h2>
+                
+                <!-- Progreso Total -->
+                <div class="mb-6">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-base font-medium text-cyan-400">Progreso Total</span>
+                        <span class="text-sm font-medium text-cyan-400">${totalLearned} / ${totalAlgs}</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-4 rounded-full" style="width: ${overallPercent.toFixed(2)}%"></div>
+                    </div>
+                </div>
+
+                <!-- Progreso Set Actual -->
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-base font-medium text-gray-300">Set Actual: <span class="font-bold text-white">${currentCategoryKey.toUpperCase()}</span></span>
+                        <span class="text-sm font-medium text-gray-300">${learnedInCurrent} / ${totalInCurrent}</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full" style="width: ${currentPercent.toFixed(2)}%"></div>
+                    </div>
+                </div>
+            `;
+            
+            dashboardStats.innerHTML = dashboardHTML;
+        }
 
         // --- LÓGICA DE "ENTRENADOR DIARIO" ---
 
         /**
-         * 4. Carga los 2 algs del día (o busca nuevos si es un nuevo día)
+         * 5. Carga los 2 algs del día (o busca nuevos si es un nuevo día)
          */
         function loadDailyAlgs() {
             const today = new Date().toISOString().split('T')[0];
@@ -236,10 +433,8 @@
             let dailyAlgs = JSON.parse(localStorage.getItem(LS_KEYS.DAILY) || '[]');
 
             if (lastVisit === today && dailyAlgs.length > 0) {
-                // Es el mismo día, mostrar los algs guardados
                 renderDailyAlgs(dailyAlgs);
             } else {
-                // Es un nuevo día, buscar 2 algs nuevos
                 const newAlgs = findNewAlgs(2);
                 localStorage.setItem(LS_KEYS.DAILY, JSON.stringify(newAlgs));
                 localStorage.setItem(LS_KEYS.LAST_VISIT, today);
@@ -248,42 +443,37 @@
         }
 
         /**
-         * 5. Encuentra 'count' algoritmos nuevos que el usuario no haya aprendido
+         * 6. Encuentra 'count' algoritmos nuevos
          */
         function findNewAlgs(count) {
             let newAlgs = [];
-            // Asegurarse de tener la lista más reciente de aprendidos
             learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
 
             for (const category of userLearnOrder) {
                 const allAlgsInCategory = allData[category];
                 if (!allAlgsInCategory) continue;
-
-                // Filtrar los que NO están en learnedAlgs
                 const unlearned = allAlgsInCategory.filter(alg => !learnedAlgs.includes(alg.id));
-
                 while (unlearned.length > 0 && newAlgs.length < count) {
-                    newAlgs.push(unlearned.shift()); // Añadir el primero de la lista
+                    newAlgs.push(unlearned.shift());
                 }
-
-                if (newAlgs.length === count) break; // Salir si ya tenemos los 2
+                if (newAlgs.length === count) break;
             }
             return newAlgs;
         }
 
         /**
-         * 6. Renderiza las tarjetas "grandes" del entrenador diario
+         * 7. Renderiza las tarjetas "grandes" del entrenador diario
          */
         function renderDailyAlgs(algs) {
-            dailyAlgsContainer.innerHTML = ''; // Limpiar
-            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]'); // Actualizar estado
+            dailyAlgsContainer.innerHTML = '';
+            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
 
             if (algs.length === 0) {
                 dailyAlgsContainer.innerHTML = `
-                    <div class="col-span-full text-center p-8 bg-gray-800 rounded-lg shadow-xl">
-                        <h3 class="text-3xl font-bold text-green-400">¡Felicidades!</h3>
+                    <div class="col-span-full text-center p-12 bg-gray-800 rounded-2xl shadow-xl border border-green-500">
+                        <h3 class="text-4xl font-bold text-green-400">¡MISIÓN CUMPLIDA!</h3>
                         <p class="text-xl text-gray-300 mt-4">Has completado todos los algoritmos de tu plan de estudio.</p>
-                        <p class="text-gray-400 mt-2">Puedes seguir practicando en la pestaña "Explorar Todo".</p>
+                        <p class="text-gray-400 mt-2">¡Eres una máquina! Sigue practicando en "Explorar Todo".</p>
                     </div>
                 `;
                 return;
@@ -291,20 +481,28 @@
 
             algs.forEach(alg => {
                 const card = document.createElement('div');
-                card.className = "bg-gray-800 rounded-lg shadow-2xl p-6 flex flex-col gap-6";
+                // Clase 'alg-card' para la delegación de eventos
+                card.className = "alg-card bg-gray-800 rounded-2xl shadow-2xl p-6 flex flex-col gap-6 border border-gray-700 transition-all duration-300";
                 card.dataset.algId = alg.id;
                 
                 const isLearned = learnedAlgs.includes(alg.id);
                 if (isLearned) {
-                    card.classList.add('opacity-50');
+                    card.classList.add('opacity-60');
                 }
 
                 const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
                 const stickeringType = userLearnOrder.find(cat => allData[cat].some(a => a.id === alg.id))?.toUpperCase() || 'PLL';
+                
+                // --- (MODIFICADO) ---
+                const spokenAlg = generateSpokenAlg(alg.alg);
+                const hasSpokenAlg = spokenAlg !== "";
+                // --- (FIN MODIFICADO) ---
 
                 card.innerHTML = `
                     <div class="w-full">
+                        <!-- ID único para el player -->
                         <twisty-player
+                            id="player-daily-${alg.id}"
                             alg="${alg.alg}"
                             ${setupHtml}
                             experimental-stickering="${stickeringType}"
@@ -316,34 +514,70 @@
                         <h3 class="text-2xl font-bold text-cyan-400">${alg.name} <span class="text-lg text-gray-400">(${alg.id})</span></h3>
                         
                         <h4 class="text-md font-semibold mt-4 text-gray-300">Algoritmo:</h4>
-                        <p class="font-mono text-lg text-yellow-300 my-1 break-all">${alg.alg}</p>
+                        <p class="font-mono text-xl text-yellow-300 my-1 break-all">${alg.alg}</p>
                         
                         <h4 class="text-md font-semibold mt-3 text-gray-300">Truco / Comentario:</h4>
-                        <p class="text-gray-200 mt-1 text-sm">${alg.trick}</p>
+                        <p class="text-gray-200 mt-1">${alg.trick}</p>
 
-                        <button class="btn-know-it w-full mt-6 py-3 rounded-lg font-semibold transition-all ${isLearned ? 'bg-green-600' : 'bg-cyan-600 hover:bg-cyan-500'} text-white" ${isLearned ? 'disabled' : ''}>
-                            ${isLearned ? '¡Aprendido!' : '¡Ya lo sé!'}
+                        <!-- Botón de Tutorial -->
+                        <button 
+                            class="btn-tutorial tab-btn-base w-full mt-4 btn-tutorial"
+                            data-alg-name="${alg.name}"
+                            data-alg-moves="${alg.alg}"
+                            data-alg-setup="${alg.setup || ''}"
+                            data-alg-spoken="${spokenAlg}"
+                            data-player-id="player-daily-${alg.id}"
+                            ${hasSpokenAlg ? '' : 'disabled'}
+                            title="${hasSpokenAlg ? 'Iniciar tutorial con voz' : 'Tutorial de voz no disponible (revisa el alg)'}">
+                            ${ICON_TUTORIAL}
+                        </button>
+
+                        <button 
+                            class="btn-know-it tab-btn-base w-full mt-6 ${isLearned ? 'bg-green-600' : 'tab-btn-active'}" 
+                            ${isLearned ? 'disabled' : ''}>
+                            ${isLearned ? ICON_CHECK : ICON_KNOW_IT}
                         </button>
                     </div>
                 `;
-
-                // Añadir listener al botón "¡Ya lo sé!"
-                card.querySelector('.btn-know-it').addEventListener('click', (e) => {
-                    markAlgAsLearned(alg.id, card);
-                }, { once: true }); // { once: true } evita doble clicks
-
                 dailyAlgsContainer.appendChild(card);
             });
             
-            // Quitar mensaje de carga
             dailyLoading.style.display = 'none';
         }
 
         /**
-         * 7. Marca un alg como aprendido y lo guarda en localStorage
+         * 8. Manejador de clics en las tarjetas (para delegación de eventos)
+         */
+        function handleCardClick(event) {
+            const knowItButton = event.target.closest('.btn-know-it');
+            const tutorialButton = event.target.closest('.btn-tutorial');
+
+            if (knowItButton && !knowItButton.disabled) {
+                const card = event.target.closest('.alg-card');
+                markAlgAsLearned(card.dataset.algId, card);
+                return; // Solo maneja un botón por clic
+            }
+
+            if (tutorialButton && !tutorialButton.disabled) {
+                if (isSpeaking) {
+                    console.warn("Ya hay un tutorial en reproducción.");
+                    return;
+                }
+                const ds = tutorialButton.dataset;
+                playTutorial(
+                    ds.algName,
+                    ds.algMoves,
+                    ds.algSetup,
+                    ds.algSpoken,
+                    ds.playerId
+                );
+            }
+        }
+
+        /**
+         * 9. Marca un alg como aprendido y actualiza TODO
          */
         function markAlgAsLearned(algId, cardElement) {
-            // Asegurarse de tener la lista más actual
             learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
             
             if (!learnedAlgs.includes(algId)) {
@@ -352,15 +586,115 @@
             }
 
             // Actualizar UI de la tarjeta
-            cardElement.classList.add('opacity-50');
+            cardElement.classList.add('opacity-60');
             const button = cardElement.querySelector('.btn-know-it');
-            button.textContent = '¡Aprendido!';
-            button.classList.remove('bg-cyan-600', 'hover:bg-cyan-500');
+            button.innerHTML = ICON_CHECK;
+            button.classList.remove('tab-btn-active');
             button.classList.add('bg-green-600');
             button.disabled = true;
+
+            // ¡Actualizar el dashboard en tiempo real!
+            updateDashboard();
         }
 
-        // --- LÓGICA DE "EXPLORAR TODO" (Original, adaptada) ---
+        // --- LÓGICA DE TUTORIAL CON VOZ (TTS) ---
+
+        /**
+         * 10. Reproduce un texto y devuelve una promesa
+         */
+        function speakPromise(text) {
+            return new Promise((resolve, reject) => {
+                const audio = new Audio();
+                audio.src = `${TTS_URL}${encodeURIComponent(text)}`;
+                audio.volume = 0.8; // Bajar un poco el volumen
+                
+                audio.onended = () => {
+                    resolve();
+                };
+                audio.onerror = (e) => {
+                    console.error("Error al reproducir audio:", e);
+                    reject(e);
+                };
+                // Preparamos la reproducción
+                audio.load();
+                audio.play().catch(e => {
+                    console.warn("Error al iniciar audio (necesita interacción del usuario):", e);
+                    // A veces los navegadores bloquean el audio si no hay clic,
+                    // pero como esto se dispara por un clic, debería estar bien.
+                    reject(e);
+                });
+            });
+        }
+
+        /**
+         * 11. Ejecuta la secuencia completa del tutorial
+         */
+        async function playTutorial(name, alg, setup, algSpoken, playerId) {
+            if (isSpeaking) return;
+            isSpeaking = true;
+
+            const player = document.getElementById(playerId);
+            if (!player) {
+                console.error("No se encontró el Twisty Player con ID:", playerId);
+                isSpeaking = false;
+                return;
+            }
+
+            // Deshabilitar TODOS los botones de tutorial
+            document.querySelectorAll('.btn-tutorial').forEach(btn => btn.disabled = true);
+
+            try {
+                // 1. Decir nombre
+                await speakPromise(`Este es un tutorial para ${name}.`);
+
+                // 2. Poner en posición (setup)
+                // Usamos `experimentalSetAlg` para aplicar el setup sin animarlo
+                player.experimentalSetAlg(setup);
+                
+                // 3. Decir "Vamos"
+                await speakPromise("Vamos a hacerlo.");
+
+                // 4. Ejecutar movimientos uno por uno
+                const moves = alg.split(' ');
+                const spokenMoves = algSpoken.split(',');
+
+                if (moves.length !== spokenMoves.length) {
+                    console.error("Error: El alg y alg_spoken no coinciden.", moves, spokenMoves);
+                    await speakPromise("Error. La guía de voz no coincide con el algoritmo.");
+                } else {
+                    for (let i = 0; i < moves.length; i++) {
+                        const move = moves[i].trim();
+                        const spokenMove = spokenMoves[i].trim();
+                        
+                        if (!move) continue; // Ignorar espacios vacíos
+
+                        // Decir el movimiento
+                        await speakPromise(spokenMove);
+                        // Ejecutar el movimiento
+                        await player.experimentalMove(move);
+                    }
+                }
+
+                // 5. Finalizar
+                await speakPromise("¡Y ya está! Completado.");
+
+            } catch (error) {
+                console.error("Error durante el tutorial:", error);
+                await speakPromise("Oh, algo ha salido mal.");
+            } finally {
+                // 6. Reactivar botones
+                isSpeaking = false;
+                document.querySelectorAll('.btn-tutorial').forEach(btn => {
+                    // Solo reactiva si TIENE un alg_spoken válido
+                    if (btn.dataset.algSpoken && btn.dataset.algSpoken.trim() !== '') {
+                        btn.disabled = false;
+                    }
+                });
+            }
+        }
+
+
+        // --- LÓGICA DE "EXPLORAR TODO" (Adaptada) ---
 
         function updateBrowseTabs() {
             browseTabs.forEach(tab => {
@@ -388,13 +722,21 @@
 
             data.forEach(alg => {
                 const card = document.createElement('div');
-                card.className = "bg-gray-800 rounded-lg shadow-2xl p-6 flex flex-col md:flex-row gap-6 items-start";
+                // Clase 'alg-card'
+                card.className = "alg-card bg-gray-800 rounded-lg shadow-xl p-6 flex flex-col md:flex-row gap-6 items-start border border-gray-700";
+                card.dataset.algId = alg.id; // Para el botón de "aprendido"
                 
                 const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
+                
+                // --- (MODIFICADO) ---
+                const spokenAlg = generateSpokenAlg(alg.alg);
+                const hasSpokenAlg = spokenAlg !== "";
+                // --- (FIN MODIFICADO) ---
                 
                 const playerHtml = `
                     <div class="w-full md:w-48 lg:w-56 flex-shrink-0">
                         <twisty-player
+                            id="player-browse-${alg.id}"
                             alg="${alg.alg}"
                             ${setupHtml}
                             experimental-stickering="${stickeringType}"
@@ -413,6 +755,19 @@
                         <p class="font-mono text-gray-400 my-1 break-all">${alg.setup || 'N/A'}</p>
                         <h4 class="text-md font-semibold mt-3 text-gray-300">Truco / Comentario:</h4>
                         <p class="text-gray-200 mt-1 text-sm">${alg.trick}</p>
+
+                        <!-- Botón de Tutorial -->
+                        <button 
+                            class="btn-tutorial tab-btn-base w-full mt-4 btn-tutorial"
+                            data-alg-name="${alg.name}"
+                            data-alg-moves="${alg.alg}"
+                            data-alg-setup="${alg.setup || ''}"
+                            data-alg-spoken="${spokenAlg}"
+                            data-player-id="player-browse-${alg.id}"
+                            ${hasSpokenAlg ? '' : 'disabled'}
+                            title="${hasSpokenAlg ? 'Iniciar tutorial con voz' : 'Tutorial de voz no disponible (revisa el alg)'}">
+                            ${ICON_TUTORIAL}
+                        </button>
                     </div>
                 `;
                 card.innerHTML = playerHtml + infoHtml;
