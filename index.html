@@ -63,14 +63,12 @@
         .tab-btn-inactive:hover:not(:disabled) {
             background-color: #374151; /* hover:bg-gray-700 */
         }
-        
-        /* Estilo para el botón de tutorial */
-        .btn-tutorial {
-            background-color: #7c3aed; /* bg-purple-600 */
-            color: white;
-        }
-        .btn-tutorial:hover:not(:disabled) {
-            background-color: #9333ea; /* hover:bg-purple-500 */
+
+        /* Estilos del Cronómetro */
+        #timer-display {
+            font-family: 'Roboto Mono', monospace, sans-serif;
+            transition: color 0.1s ease-in-out;
+            user-select: none; /* Evitar seleccionar el texto del timer */
         }
 
         /* Animación para el modal */
@@ -88,9 +86,35 @@
         .modal-scale-in {
             animation: scaleIn 0.3s ease-out;
         }
+        
+        /* (NUEVO) Overlay para forzar modo horizontal en móvil en la vista de timer */
+        #mobile-orientation-overlay {
+            display: none; /* Oculto por defecto */
+        }
+        @media (max-width: 768px) and (orientation: portrait) {
+            /* Solo se muestra si el body tiene la clase (inyectada por JS) Y está en portrait */
+            body.timer-view-active #mobile-orientation-overlay {
+                display: flex;
+            }
+            /* Ocultar el timer real */
+            body.timer-view-active #timer-view {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans antialiased min-h-screen">
+
+    <!-- (NUEVO) MODAL DE ORIENTACIÓN -->
+    <div id="mobile-orientation-overlay" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50">
+        <div class="text-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24 mx-auto mb-4 animate-pulse">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-1.07-4.089a5 5 0 00-8.573-2.733l-1.558 1.558a5 5 0 002.733 8.573l4.09 1.07 4.09-1.07a5 5 0 002.733-8.573L16.6 13.684c-.531.031-.998.063-1.458.11l-1.458-.11z" />
+            </svg>
+            <h2 class="text-3xl font-bold mb-4">Gira tu dispositivo</h2>
+            <p class="text-lg text-gray-300">Por favor, rota tu móvil a modo horizontal para usar el cronómetro.</p>
+        </div>
+    </div>
 
     <!-- 1. MODAL DE CONFIGURACIÓN INICIAL (Rediseñado) -->
     <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50 hidden modal-fade-in">
@@ -101,7 +125,7 @@
                  <twisty-player
                     alg="R U R' U' R' F R F'"
                     setup="y'"
-                    control-panel="none"
+                    control-panel="none" <!-- Mantenemos "none" en el modal de bienvenida -->
                     visualization="2D"
                     experimental-stickering="PLL"
                     background="none"
@@ -134,16 +158,17 @@
             <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
                 Entrenador CFOP
             </h1>
-            <nav class="flex justify-center gap-4 mt-8">
+            <!-- NAVEGACIÓN ACTUALIZADA -->
+            <nav class="flex justify-center flex-wrap gap-4 mt-8">
                 <button id="nav-daily" class="tab-btn-base"></button> <!-- Contenido inyectado por JS -->
                 <button id="nav-browse" class="tab-btn-base"></button> <!-- Contenido inyectado por JS -->
+                <button id="nav-timer" class="tab-btn-base"></button> <!-- NUEVO: Cronómetro -->
             </nav>
         </header>
 
-        <!-- 3. VISTA: ENTRENADOR DIARIO (Rediseñada con Dashboard) -->
+        <!-- 3. VISTA: ENTRENADOR DIARIO -->
         <main id="daily-view">
-            
-            <!-- (NUEVO) Dashboard de Progreso -->
+            <!-- Dashboard de Progreso -->
             <section id="dashboard-stats" class="mb-12 p-8 bg-gray-800 rounded-2xl shadow-xl border border-gray-700">
                 <!-- El contenido del dashboard se inyectará aquí -->
             </section>
@@ -155,7 +180,7 @@
             </div>
         </main>
 
-        <!-- 4. VISTA: EXPLORAR TODO (Contenido original) -->
+        <!-- 4. VISTA: EXPLORAR TODO -->
         <main id="browse-view" class="hidden">
             <!-- Navegación de Pestañas (Explorar) -->
             <nav class="flex justify-center gap-4 mb-8">
@@ -169,6 +194,48 @@
                 <p id="browse-loading" class="text-center text-2xl font-semibold text-gray-400 col-span-full">Selecciona una categoría para empezar.</p>
             </div>
         </main>
+        
+        <!-- 5. (NUEVO) VISTA: CRONÓMETRO -->
+        <main id="timer-view" class="hidden">
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- Columna Izquierda: Timer (ACTUALIZADA con áreas táctiles) -->
+                <div class="lg:w-3/5 w-full flex relative items-center justify-center bg-gray-800 rounded-2xl border border-gray-700 p-8" style="min-height: 400px; touch-action: none;">
+                    
+                    <!-- (NUEVO) Áreas táctiles/click -->
+                    <div id="btn-timer-left" class="absolute left-0 top-0 w-1/2 h-full cursor-pointer z-20"></div>
+                    <div id="btn-timer-right" class="absolute right-0 top-0 w-1/2 h-full cursor-pointer z-20"></div>
+                    
+                    <div id="timer-display" class="text-9xl font-bold text-gray-100 z-10">
+                        0.00
+                    </div>
+                </div>
+                
+                <!-- Columna Derecha: Stats -->
+                <div class="lg:w-2/5 w-full bg-gray-800 rounded-2xl border border-gray-700 p-8">
+                    <h2 class="text-3xl font-bold text-cyan-400 mb-6">Sesión</h2>
+                    
+                    <!-- Estadísticas -->
+                    <div id="stats-container" class="grid grid-cols-2 gap-4 mb-6">
+                        <!-- Stats se inyectan aquí -->
+                    </div>
+                    
+                    <!-- Lista de Tiempos -->
+                    <h3 class="text-xl font-semibold text-gray-200 mb-2">Tiempos</h3>
+                    <div id="solves-list-container" class="h-64 overflow-y-auto bg-gray-900 rounded-lg p-4 text-gray-300 font-mono text-lg flex flex-wrap gap-x-4">
+                        <!-- Tiempos se inyectan aquí -->
+                    </div>
+                    
+                    <!-- Botón de Borrar -->
+                    <button id="delete-solves-btn" class="w-full mt-6 tab-btn-base bg-red-600 hover:bg-red-500 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12.548 0A48.108 48.108 0 015.8 5.392m7.708 0a48.108 48.108 0 01-7.708 0z" />
+                        </svg>
+                        Borrar Sesión
+                    </button>
+                </div>
+            </div>
+        </main>
 
     </div>
 
@@ -177,47 +244,29 @@
         // --- CONSTANTES ---
         const JSON_URL = 'https://logise1.github.io/cfop/cfop.json';
         const LS_KEYS = {
-            SETUP: 'cfop_user_setup_v3', // v3 para la nueva UI
+            SETUP: 'cfop_user_setup_v3',
             ORDER: 'cfop_learn_order_v3',
             LEARNED: 'cfop_learned_algs_v3',
             DAILY: 'cfop_daily_algs_v3',
-            LAST_VISIT: 'cfop_last_visit_date_v3'
-        };
-        const TTS_URL = 'https://api.streamelements.com/kappa/v2/speech?voice=Penelope&text=';
-        
-        // (NUEVO) Mapa de traducción de movimientos
-        const MOVE_MAP = {
-            "R": "erre", "R'": "erre prima", "R2": "erre dos", "R2'": "erre dos prima",
-            "U": "u", "U'": "u prima", "U2": "u dos", "U2'": "u dos prima",
-            "F": "efeh", "F'": "efeh prima", "F2": "efeh dos", "F2'": "efeh dos prima",
-            "L": "eleh", "L'": "eleh prima", "L2": "eleh dos", "L2'": "eleh dos prima",
-            "D": "deh", "D'": "deh prima", "D2": "deh dos", "D2'": "deh dos prima",
-            "B": "beh", "B'": "beh prima", "B2": "beh dos", "B2'": "beh dos prima",
-            "M": "emeh", "M'": "emeh prima", "M2": "emeh dos", "M2'": "emeh dos prima",
-            "x": "equis", "x'": "equis prima", "x2": "equis dos", "x2'": "equis dos prima",
-            "y": "igriega", "y'": "igriega prima", "y2": "igriega dos", "y2'": "igriega dos prima",
-            "z": "seta", "z'": "seta prima", "z2": "seta dos", "z2'": "seta dos prima",
-            "r": "erre ancha", "r'": "erre ancha prima", "r2": "erre ancha dos", "r2'": "erre ancha dos prima",
-            "l": "eleh ancha", "l'": "eleh ancha prima", "l2": "eleh ancha dos", "l2'": "eleh ancha dos prima",
-            "u": "u ancha", "u'": "u ancha prima", "u2": "u ancha dos", "u2'": "u ancha dos prima",
-            "d": "deh ancha", "d'": "deh ancha prima", "d2": "deh ancha dos", "d2'": "deh ancha dos prima",
-            "f": "efeh ancha", "f'": "efeh ancha prima", "f2": "efeh ancha dos", "f2'": "efeh ancha dos prima",
-            "b": "beh ancha", "b'": "beh ancha prima", "b2": "beh ancha dos", "b2'": "beh ancha dos prima"
+            LAST_VISIT: 'cfop_last_visit_date_v3',
+            SOLVES: 'cfop_solves_v1' // Para el cronómetro
         };
         
         // Iconos SVG para los botones (de Heroicons)
         const ICON_CALENDAR = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg> <span>Diario</span>`;
         const ICON_GRID = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg> <span>Explorar</span>`;
+        const ICON_TIMER = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> <span>Cronómetro</span>`;
         const ICON_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg> <span>¡Aprendido!</span>`;
         const ICON_KNOW_IT = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> ¡Ya lo sé!`;
-        const ICON_TUTORIAL = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg> <span>Tutorial con Voz</span>`;
 
         // --- REFERENCIAS DEL DOM ---
         const setupModal = document.getElementById('setup-modal');
         const dailyView = document.getElementById('daily-view');
         const browseView = document.getElementById('browse-view');
+        const timerView = document.getElementById('timer-view'); 
         const navDaily = document.getElementById('nav-daily');
         const navBrowse = document.getElementById('nav-browse');
+        const navTimer = document.getElementById('nav-timer'); 
         const dashboardStats = document.getElementById('dashboard-stats'); 
         const dailyAlgsContainer = document.getElementById('daily-algs-container');
         const dailyLoading = document.getElementById('daily-loading');
@@ -225,6 +274,13 @@
         const browseLoading = document.getElementById('browse-loading');
         const browseTabs = document.querySelectorAll('.tab-btn-browse');
         const setupButtons = document.querySelectorAll('.setup-btn');
+        // (NUEVO) Refs del Timer
+        const timerDisplay = document.getElementById('timer-display');
+        const solvesListContainer = document.getElementById('solves-list-container');
+        const statsContainer = document.getElementById('stats-container');
+        const deleteSolvesBtn = document.getElementById('delete-solves-btn');
+        const btnTimerLeft = document.getElementById('btn-timer-left');
+        const btnTimerRight = document.getElementById('btn-timer-right');
 
         // --- ESTADO DE LA APLICACIÓN ---
         let allData = {};
@@ -232,7 +288,16 @@
         let userLearnOrder = [];
         let learnedAlgs = [];
         let currentBrowseCategory = 'f2l';
-        let isSpeaking = false; // Flag para evitar múltiples audios
+        let currentView = 'daily'; // Para controlar los key listeners
+        
+        // (NUEVO) Estado del Timer
+        let timerInterval;
+        let timerStartTime;
+        let timerRunning = false;
+        let timerReady = false;
+        let solvesList = [];
+        let leftThumbDown = false;
+        let rightThumbDown = false;
 
         // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', fetchData);
@@ -240,29 +305,7 @@
         // Inyectar iconos en botones de nav
         navDaily.innerHTML = ICON_CALENDAR;
         navBrowse.innerHTML = ICON_GRID;
-
-        /**
-         * (NUEVA FUNCIÓN)
-         * Genera el string hablado a partir de la notación de alg.
-         */
-        function generateSpokenAlg(algString) {
-            if (!algString) return "";
-            try {
-                const moves = algString.trim().split(' ');
-                const spokenMoves = moves.map(move => {
-                    if (MOVE_MAP[move]) {
-                        return MOVE_MAP[move];
-                    }
-                    // Si no se encuentra, devuelve el movimiento tal cual (puede ser un error en el alg)
-                    console.warn(`Movimiento no encontrado en MOVE_MAP: ${move}`);
-                    return move;
-                });
-                return spokenMoves.join(',');
-            } catch (error) {
-                console.error(`Error al generar alg hablado para: ${algString}`, error);
-                return ""; // Devuelve vacío si falla
-            }
-        }
+        navTimer.innerHTML = ICON_TIMER; 
 
         /**
          * 1. Carga los datos del JSON y luego inicia la app
@@ -295,38 +338,23 @@
             // Listeners de navegación principal
             navDaily.addEventListener('click', showDailyView);
             navBrowse.addEventListener('click', showBrowseView);
-
-            // Listeners de "Explorar"
-            browseTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    currentBrowseCategory = tab.dataset.category;
-                    updateBrowseTabs();
-                    renderBrowseCategory(currentBrowseCategory);
-                });
-            });
+            navTimer.addEventListener('click', showTimerView); 
             
-            // Listeners de delegación de eventos para botones de tutorial
-            dailyAlgsContainer.addEventListener('click', handleCardClick);
-            browseContentContainer.addEventListener('click', handleCardClick);
-
+            // (NUEVO) Listeners globales para el timer
+            window.addEventListener('keydown', handleTimerKeydown);
+            window.addEventListener('keyup', handleTimerKeyup);
 
             if (setupDone) {
-                // Cargar datos de localStorage
-                userLearnOrder = JSON.parse(localStorage.getItem(LS_KEYS.ORDER) || '["f2l","oll","pll"]');
-                learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
-                
-                // Mostrar la vista diaria por defecto
-                showDailyView();
+                // El usuario ya está configurado, cargar datos y mostrar vista diaria
+                loadUserData();
+                initDailyView();
             } else {
-                // Mostrar modal de configuración
+                // Es la primera vez, mostrar modal de configuración
                 setupModal.classList.remove('hidden');
-                setupButtons.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        // Resaltar botón seleccionado en el modal
-                        setupButtons.forEach(b => b.classList.replace('tab-btn-active', 'tab-btn-inactive'));
-                        e.currentTarget.classList.replace('tab-btn-inactive', 'tab-btn-active');
-                        // Usar un pequeño delay para que vea el click antes de cerrar
-                        setTimeout(() => handleSetup(btn.dataset.order), 200);
+                setupButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const order = button.dataset.order.split(',');
+                        saveUserSetup(order);
                     });
                 });
             }
@@ -335,454 +363,565 @@
         /**
          * 3. Guarda la configuración inicial del usuario
          */
-        function handleSetup(orderString) {
-            userLearnOrder = orderString.split(',');
-            learnedAlgs = [];
-
+        function saveUserSetup(order) {
             localStorage.setItem(LS_KEYS.SETUP, 'true');
-            localStorage.setItem(LS_KEYS.ORDER, JSON.stringify(userLearnOrder));
-            localStorage.setItem(LS_KEYS.LEARNED, JSON.stringify(learnedAlgs));
+            localStorage.setItem(LS_KEYS.ORDER, JSON.stringify(order));
+            localStorage.setItem(LS_KEYS.LEARNED, JSON.stringify([])); // Empezar con 0 aprendidos
             
+            loadUserData();
+            initDailyView();
+            
+            // Ocultar modal
             setupModal.classList.add('hidden');
-            showDailyView(); // Mostrar la vista diaria después de configurar
         }
 
-        // --- LÓGICA DE VISTAS ---
+        /**
+         * 4. Carga los datos del usuario desde localStorage
+         */
+        function loadUserData() {
+            userLearnOrder = JSON.parse(localStorage.getItem(LS_KEYS.ORDER) || '["f2l","oll","pll"]');
+            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
+        }
 
+        /**
+         * 5. Lógica de Navegación: Mostrar vista Diaria
+         */
         function showDailyView() {
+            currentView = 'daily';
+            document.body.classList.remove('timer-view-active'); // (NUEVO)
             dailyView.classList.remove('hidden');
             browseView.classList.add('hidden');
+            timerView.classList.add('hidden');
+            
             navDaily.classList.add('tab-btn-active');
             navDaily.classList.remove('tab-btn-inactive');
             navBrowse.classList.add('tab-btn-inactive');
             navBrowse.classList.remove('tab-btn-active');
+            navTimer.classList.add('tab-btn-inactive');
+            navTimer.classList.remove('tab-btn-active');
             
-            updateDashboard(); // Actualizar stats
-            loadDailyAlgs(); // Cargar los algoritmos del día
+            // Actualizar la vista diaria (por si se marcó algo como aprendido en "Explorar")
+            initDailyView();
         }
 
+        /**
+         * 6. Lógica de Navegación: Mostrar vista Explorar
+         */
         function showBrowseView() {
+            currentView = 'browse';
+            document.body.classList.remove('timer-view-active'); // (NUEVO)
             dailyView.classList.add('hidden');
             browseView.classList.remove('hidden');
+            timerView.classList.add('hidden');
+
             navDaily.classList.add('tab-btn-inactive');
             navDaily.classList.remove('tab-btn-active');
             navBrowse.classList.add('tab-btn-active');
             navBrowse.classList.remove('tab-btn-inactive');
-
-            // Renderizar la categoría de "Explorar" seleccionada
-            updateBrowseTabs();
-            renderBrowseCategory(currentBrowseCategory);
+            navTimer.classList.add('tab-btn-inactive');
+            navTimer.classList.remove('tab-btn-active');
+            
+            initBrowseView();
         }
         
-        // --- LÓGICA DEL DASHBOARD ---
+        /**
+         * (NUEVO) Lógica de Navegación: Mostrar vista Cronómetro
+         */
+        function showTimerView() {
+            currentView = 'timer';
+            document.body.classList.add('timer-view-active'); // (NUEVO)
+            dailyView.classList.add('hidden');
+            browseView.classList.add('hidden');
+            timerView.classList.remove('hidden');
+
+            navDaily.classList.add('tab-btn-inactive');
+            navDaily.classList.remove('tab-btn-active');
+            navBrowse.classList.add('tab-btn-inactive');
+            navBrowse.classList.remove('tab-btn-active');
+            navTimer.classList.add('tab-btn-active');
+            navTimer.classList.remove('tab-btn-inactive');
+            
+            initTimerView();
+        }
 
         /**
-         * 4. Actualiza el dashboard con el progreso del usuario
+         * 7. Inicializa la vista Diaria (Dashboard y Algoritmos)
+         */
+        function initDailyView() {
+            dailyLoading.classList.remove('hidden');
+            dailyAlgsContainer.innerHTML = ''; // Limpiar algs anteriores
+            
+            updateDashboard(); // Actualizar estadísticas
+            const dailyAlgs = getDailyAlgs();
+            
+            if (dailyAlgs.length > 0) {
+                dailyAlgs.forEach(alg => {
+                    const card = renderAlgCard(alg, alg.category);
+                    dailyAlgsContainer.appendChild(card);
+                });
+                dailyLoading.classList.add('hidden');
+            } else {
+                dailyLoading.textContent = '¡Felicidades! Has aprendido todos los algoritmos.';
+            }
+        }
+
+        /**
+         * 8. Obtiene los 2 algoritmos del día (o los genera)
+         */
+        function getDailyAlgs() {
+            const today = new Date().toISOString().split('T')[0];
+            const lastVisit = localStorage.getItem(LS_KEYS.LAST_VISIT);
+            const storedDailyAlgs = JSON.parse(localStorage.getItem(LS_KEYS.DAILY) || '[]');
+
+            if (lastVisit === today && storedDailyAlgs.length > 0) {
+                // Es el mismo día, devolver los algs guardados
+                return storedDailyAlgs;
+            }
+            
+            // Es un nuevo día o no hay algs guardados. Generar nuevos.
+            localStorage.setItem(LS_KEYS.LAST_VISIT, today);
+            
+            const newDailyAlgs = [];
+            
+            // Recorrer el orden de aprendizaje preferido por el usuario
+            for (const category of userLearnOrder) {
+                if (!allData[category]) continue;
+                
+                for (const alg of allData[category]) {
+                    if (newDailyAlgs.length >= 2) break; // Ya tenemos 2
+                    
+                    if (!learnedAlgs.includes(alg.id)) {
+                        alg.category = category; // Añadir la categoría para el renderizado
+                        newDailyAlgs.push(alg);
+                    }
+                }
+                if (newDailyAlgs.length >= 2) break;
+            }
+            
+            // Guardar estos 2 algs para el resto del día
+            localStorage.setItem(LS_KEYS.DAILY, JSON.stringify(newDailyAlgs));
+            return newDailyAlgs;
+        }
+
+        /**
+         * 9. (NUEVO) Actualiza el dashboard de progreso
          */
         function updateDashboard() {
-            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
-            const totalLearned = learnedAlgs.length;
-            const overallPercent = totalAlgs > 0 ? (totalLearned / totalAlgs) * 100 : 0;
+            if (!allData.f2l) return; // Esperar a que los datos carguen
 
-            // Encontrar el set actual
-            let currentCategoryKey = userLearnOrder.find(cat => allData[cat]?.some(alg => !learnedAlgs.includes(alg.id))) 
-                                    || userLearnOrder[userLearnOrder.length - 1];
+            const learnedCount = learnedAlgs.length;
+            const totalPercent = totalAlgs > 0 ? (learnedCount / totalAlgs * 100).toFixed(0) : 0;
             
-            const currentCategory = allData[currentCategoryKey] || [];
-            const learnedInCurrent = currentCategory.filter(alg => learnedAlgs.includes(alg.id)).length || 0;
-            const totalInCurrent = currentCategory.length || 0;
-            const currentPercent = totalInCurrent > 0 ? (learnedInCurrent / totalInCurrent) * 100 : 0;
-
-            let dashboardHTML = `
-                <h2 class="text-3xl font-bold text-center mb-6 text-white">Tu Progreso</h2>
-                
-                <!-- Progreso Total -->
-                <div class="mb-6">
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-cyan-400">Progreso Total</span>
-                        <span class="text-sm font-medium text-cyan-400">${totalLearned} / ${totalAlgs}</span>
+            let currentCategory = userLearnOrder[0];
+            let currentCategoryTotal = allData[currentCategory].length;
+            let currentCategoryLearned = 0;
+            
+            for (const alg of allData[currentCategory]) {
+                if (learnedAlgs.includes(alg.id)) {
+                    currentCategoryLearned++;
+                }
+            }
+            
+            // Si el set actual está completo, pasar al siguiente
+            if (currentCategoryLearned === currentCategoryTotal && userLearnOrder.length > 1) {
+                currentCategory = userLearnOrder[1];
+                currentCategoryTotal = allData[currentCategory].length;
+                currentCategoryLearned = 0;
+                for (const alg of allData[currentCategory]) {
+                    if (learnedAlgs.includes(alg.id)) {
+                        currentCategoryLearned++;
+                    }
+                }
+            }
+            // Si el segundo también está completo... etc.
+            if (currentCategoryLearned === currentCategoryTotal && userLearnOrder.length > 2) {
+                currentCategory = userLearnOrder[2];
+                currentCategoryTotal = allData[currentCategory].length;
+                currentCategoryLearned = 0;
+                for (const alg of allData[currentCategory]) {
+                    if (learnedAlgs.includes(alg.id)) {
+                        currentCategoryLearned++;
+                    }
+                }
+            }
+            
+            const currentPercent = (currentCategoryLearned / currentCategoryTotal * 100).toFixed(0);
+            
+            dashboardStats.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Progreso Total -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg font-semibold text-gray-200">Progreso Total</span>
+                            <span class="text-xl font-bold text-cyan-400">${learnedCount} / ${totalAlgs}</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-4" style="width: ${totalPercent}%"></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-700 rounded-full h-4">
-                        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-4 rounded-full" style="width: ${overallPercent.toFixed(2)}%"></div>
-                    </div>
-                </div>
-
-                <!-- Progreso Set Actual -->
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-gray-300">Set Actual: <span class="font-bold text-white">${currentCategoryKey.toUpperCase()}</span></span>
-                        <span class="text-sm font-medium text-gray-300">${learnedInCurrent} / ${totalInCurrent}</span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-4">
-                        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full" style="width: ${currentPercent.toFixed(2)}%"></div>
+                    <!-- Progreso Set Actual -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg font-semibold text-gray-200">Set Actual: <span class="uppercase font-bold">${currentCategory}</span></span>
+                            <span class="text-xl font-bold text-cyan-400">${currentCategoryLearned} / ${currentCategoryTotal}</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-4" style="width: ${currentPercent}%"></div>
+                        </div>
                     </div>
                 </div>
             `;
-            
-            dashboardStats.innerHTML = dashboardHTML;
-        }
-
-        // --- LÓGICA DE "ENTRENADOR DIARIO" ---
-
-        /**
-         * 5. Carga los 2 algs del día (o busca nuevos si es un nuevo día)
-         */
-        function loadDailyAlgs() {
-            const today = new Date().toISOString().split('T')[0];
-            const lastVisit = localStorage.getItem(LS_KEYS.LAST_VISIT);
-            let dailyAlgs = JSON.parse(localStorage.getItem(LS_KEYS.DAILY) || '[]');
-
-            if (lastVisit === today && dailyAlgs.length > 0) {
-                renderDailyAlgs(dailyAlgs);
-            } else {
-                const newAlgs = findNewAlgs(2);
-                localStorage.setItem(LS_KEYS.DAILY, JSON.stringify(newAlgs));
-                localStorage.setItem(LS_KEYS.LAST_VISIT, today);
-                renderDailyAlgs(newAlgs);
-            }
         }
 
         /**
-         * 6. Encuentra 'count' algoritmos nuevos
+         * 10. Inicializa la vista Explorar (Listeners de pestañas)
          */
-        function findNewAlgs(count) {
-            let newAlgs = [];
-            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
-
-            for (const category of userLearnOrder) {
-                const allAlgsInCategory = allData[category];
-                if (!allAlgsInCategory) continue;
-                const unlearned = allAlgsInCategory.filter(alg => !learnedAlgs.includes(alg.id));
-                while (unlearned.length > 0 && newAlgs.length < count) {
-                    newAlgs.push(unlearned.shift());
-                }
-                if (newAlgs.length === count) break;
-            }
-            return newAlgs;
-        }
-
-        /**
-         * 7. Renderiza las tarjetas "grandes" del entrenador diario
-         */
-        function renderDailyAlgs(algs) {
-            dailyAlgsContainer.innerHTML = '';
-            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
-
-            if (algs.length === 0) {
-                dailyAlgsContainer.innerHTML = `
-                    <div class="col-span-full text-center p-12 bg-gray-800 rounded-2xl shadow-xl border border-green-500">
-                        <h3 class="text-4xl font-bold text-green-400">¡MISIÓN CUMPLIDA!</h3>
-                        <p class="text-xl text-gray-300 mt-4">Has completado todos los algoritmos de tu plan de estudio.</p>
-                        <p class="text-gray-400 mt-2">¡Eres una máquina! Sigue practicando en "Explorar Todo".</p>
-                    </div>
-                `;
-                return;
-            }
-
-            algs.forEach(alg => {
-                const card = document.createElement('div');
-                // Clase 'alg-card' para la delegación de eventos
-                card.className = "alg-card bg-gray-800 rounded-2xl shadow-2xl p-6 flex flex-col gap-6 border border-gray-700 transition-all duration-300";
-                card.dataset.algId = alg.id;
-                
-                const isLearned = learnedAlgs.includes(alg.id);
-                if (isLearned) {
-                    card.classList.add('opacity-60');
-                }
-
-                const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
-                const stickeringType = userLearnOrder.find(cat => allData[cat].some(a => a.id === alg.id))?.toUpperCase() || 'PLL';
-                
-                // --- (MODIFICADO) ---
-                const spokenAlg = generateSpokenAlg(alg.alg);
-                const hasSpokenAlg = spokenAlg !== "";
-                // --- (FIN MODIFICADO) ---
-
-                card.innerHTML = `
-                    <div class="w-full">
-                        <!-- ID único para el player -->
-                        <twisty-player
-                            id="player-daily-${alg.id}"
-                            alg="${alg.alg}"
-                            ${setupHtml}
-                            experimental-stickering="${stickeringType}"
-                            control-panel
-                            experimental-arrows
-                        ></twisty-player>
-                    </div>
-                    <div class="w-full">
-                        <h3 class="text-2xl font-bold text-cyan-400">${alg.name} <span class="text-lg text-gray-400">(${alg.id})</span></h3>
-                        
-                        <h4 class="text-md font-semibold mt-4 text-gray-300">Algoritmo:</h4>
-                        <p class="font-mono text-xl text-yellow-300 my-1 break-all">${alg.alg}</p>
-                        
-                        <h4 class="text-md font-semibold mt-3 text-gray-300">Truco / Comentario:</h4>
-                        <p class="text-gray-200 mt-1">${alg.trick}</p>
-
-                        <!-- Botón de Tutorial -->
-                        <button 
-                            class="btn-tutorial tab-btn-base w-full mt-4 btn-tutorial"
-                            data-alg-name="${alg.name}"
-                            data-alg-moves="${alg.alg}"
-                            data-alg-setup="${alg.setup || ''}"
-                            data-alg-spoken="${spokenAlg}"
-                            data-player-id="player-daily-${alg.id}"
-                            ${hasSpokenAlg ? '' : 'disabled'}
-                            title="${hasSpokenAlg ? 'Iniciar tutorial con voz' : 'Tutorial de voz no disponible (revisa el alg)'}">
-                            ${ICON_TUTORIAL}
-                        </button>
-
-                        <button 
-                            class="btn-know-it tab-btn-base w-full mt-6 ${isLearned ? 'bg-green-600' : 'tab-btn-active'}" 
-                            ${isLearned ? 'disabled' : ''}>
-                            ${isLearned ? ICON_CHECK : ICON_KNOW_IT}
-                        </button>
-                    </div>
-                `;
-                dailyAlgsContainer.appendChild(card);
+        function initBrowseView() {
+            browseTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    currentBrowseCategory = tab.dataset.category;
+                    
+                    // Actualizar estilos de pestañas
+                    browseTabs.forEach(t => t.classList.add('tab-btn-inactive'));
+                    tab.classList.remove('tab-btn-inactive');
+                    tab.classList.add('tab-btn-active');
+                    
+                    renderBrowseCategory(currentBrowseCategory);
+                });
             });
             
-            dailyLoading.style.display = 'none';
+            // Activar la pestaña F2L por defecto (o la primera activa)
+            const activeTab = document.querySelector('.tab-btn-browse.tab-btn-active') || document.getElementById('btn-browse-f2l');
+            activeTab.click();
         }
 
         /**
-         * 8. Manejador de clics en las tarjetas (para delegación de eventos)
+         * 11. Renderiza todos los algs de una categoría en "Explorar"
          */
-        function handleCardClick(event) {
-            const knowItButton = event.target.closest('.btn-know-it');
-            const tutorialButton = event.target.closest('.btn-tutorial');
-
-            if (knowItButton && !knowItButton.disabled) {
-                const card = event.target.closest('.alg-card');
-                markAlgAsLearned(card.dataset.algId, card);
-                return; // Solo maneja un botón por clic
-            }
-
-            if (tutorialButton && !tutorialButton.disabled) {
-                if (isSpeaking) {
-                    console.warn("Ya hay un tutorial en reproducción.");
-                    return;
-                }
-                const ds = tutorialButton.dataset;
-                playTutorial(
-                    ds.algName,
-                    ds.algMoves,
-                    ds.algSetup,
-                    ds.algSpoken,
-                    ds.playerId
-                );
-            }
-        }
-
-        /**
-         * 9. Marca un alg como aprendido y actualiza TODO
-         */
-        function markAlgAsLearned(algId, cardElement) {
-            learnedAlgs = JSON.parse(localStorage.getItem(LS_KEYS.LEARNED) || '[]');
+        function renderBrowseCategory(category) {
+            browseLoading.classList.add('hidden');
+            browseContentContainer.innerHTML = ''; // Limpiar
             
-            if (!learnedAlgs.includes(algId)) {
-                learnedAlgs.push(algId);
-                localStorage.setItem(LS_KEYS.LEARNED, JSON.stringify(learnedAlgs));
+            const algs = allData[category];
+            if (!algs) {
+                browseLoading.textContent = `No se encontraron algoritmos para ${category}.`;
+                browseLoading.classList.remove('hidden');
+                return;
             }
+            
+            algs.forEach(alg => {
+                const card = renderAlgCard(alg, category);
+                browseContentContainer.appendChild(card);
+            });
+        }
 
-            // Actualizar UI de la tarjeta
-            cardElement.classList.add('opacity-60');
-            const button = cardElement.querySelector('.btn-know-it');
+        /**
+         * 12. CREA LA TARJETA HTML para un algoritmo (Usado por ambas vistas)
+         * (ACTUALIZADO: Se AÑADIERON controles al visor)
+         */
+        function renderAlgCard(alg, category) {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 flex flex-col';
+            card.dataset.algId = alg.id;
+
+            const stickering = category.toUpperCase();
+            const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
+            const isLearned = learnedAlgs.includes(alg.id);
+            const knowItBtnState = isLearned 
+                ? 'bg-green-600 text-white shadow-none' 
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600';
+            const knowItIcon = isLearned ? ICON_CHECK : ICON_KNOW_IT;
+            
+            card.innerHTML = `
+                <div class="w-full max-w-sm mx-auto mb-6">
+                    <twisty-player
+                        class="alg-player"
+                        ${setupHtml}
+                        alg="${alg.alg}"
+                        control-panel="normal" <!-- (ACTUALIZADO) -->
+                        experimental-stickering="${stickering}"
+                        background="none"
+                    ></twisty-player>
+                </div>
+                
+                <div class="flex-grow">
+                    <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">${alg.name} (${alg.id})</h3>
+                    <p class="text-lg font-mono text-cyan-300 my-3 p-3 bg-gray-900 rounded-lg break-words">${alg.alg}</p>
+                    ${alg.setup ? `<p class="text-sm font-mono text-yellow-400 my-2 p-2 bg-gray-900 rounded-lg break-words">Setup: ${alg.setup}</p>` : ''}
+                    <p class="text-gray-300 italic mt-2">${alg.trick}</p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-4 mt-6"> <!-- Layout actualizado a 1 columna -->
+                    <button class="btn-know-it tab-btn-base ${knowItBtnState}" ${isLearned ? 'disabled' : ''}>
+                        ${knowItIcon}
+                    </button>
+                    <!-- Botón de tutorial eliminado -->
+                </div>
+            `;
+            
+            // Añadir Listeners
+            const knowItButton = card.querySelector('.btn-know-it');
+            knowItButton.addEventListener('click', () => markAsLearned(alg.id, knowItButton));
+            
+            return card;
+        }
+
+        /**
+         * 13. Marca un algoritmo como "aprendido"
+         */
+        function markAsLearned(algId, button) {
+            if (learnedAlgs.includes(algId)) return; // Ya aprendido
+            
+            learnedAlgs.push(algId);
+            localStorage.setItem(LS_KEYS.LEARNED, JSON.stringify(learnedAlgs));
+            
+            // Actualizar UI del botón
             button.innerHTML = ICON_CHECK;
-            button.classList.remove('tab-btn-active');
-            button.classList.add('bg-green-600');
+            button.classList.remove('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+            button.classList.add('bg-green-600', 'text-white');
             button.disabled = true;
-
-            // ¡Actualizar el dashboard en tiempo real!
+            
+            // Actualizar el dashboard en tiempo real
             updateDashboard();
         }
 
-        // --- LÓGICA DE TUTORIAL CON VOZ (TTS) ---
+        // === (NUEVO) SECCIÓN DEL CRONÓMETRO (LÓGICA ACTUALIZADA) ===
 
         /**
-         * 10. Reproduce un texto y devuelve una promesa
+         * 14. Inicializa la vista del Cronómetro
          */
-        function speakPromise(text) {
-            return new Promise((resolve, reject) => {
-                const audio = new Audio();
-                audio.src = `${TTS_URL}${encodeURIComponent(text)}`;
-                audio.volume = 0.8; // Bajar un poco el volumen
-                
-                audio.onended = () => {
-                    resolve();
-                };
-                audio.onerror = (e) => {
-                    console.error("Error al reproducir audio:", e);
-                    reject(e);
-                };
-                // Preparamos la reproducción
-                audio.load();
-                audio.play().catch(e => {
-                    console.warn("Error al iniciar audio (necesita interacción del usuario):", e);
-                    // A veces los navegadores bloquean el audio si no hay clic,
-                    // pero como esto se dispara por un clic, debería estar bien.
-                    reject(e);
-                });
-            });
-        }
-
-        /**
-         * 11. Ejecuta la secuencia completa del tutorial
-         */
-        async function playTutorial(name, alg, setup, algSpoken, playerId) {
-            if (isSpeaking) return;
-            isSpeaking = true;
-
-            const player = document.getElementById(playerId);
-            if (!player) {
-                console.error("No se encontró el Twisty Player con ID:", playerId);
-                isSpeaking = false;
-                return;
-            }
-
-            // Deshabilitar TODOS los botones de tutorial
-            document.querySelectorAll('.btn-tutorial').forEach(btn => btn.disabled = true);
-
-            try {
-                // Esperar a que el custom element esté completamente "listo"
-                await customElements.whenDefined('twisty-player');
-                
-                // 1. Decir nombre
-                await speakPromise(`Este es un tutorial para ${name}.`);
-
-                // 2. Poner en posición (setup)
-                // --- ¡¡¡AQUÍ ESTÁ LA CORRECCIÓN!!! ---
-                // `experimentalReset()` "destruye" el progreso y 
-                // "recrea" el cubo en el estado inicial, 
-                // que está definido por el atributo `setup`.
-                // Mi error anterior fue añadir `experimentalMove(setup)` después de esto.
-                await player.experimentalReset();
-                // ¡Eso es todo! El cubo ya está en la posición de setup.
-                // --- FIN DE LA CORRECCIÓN ---
-                
-                
-                // 3. Decir "Vamos"
-                await speakPromise("Vamos a hacerlo.");
-
-                // 4. Ejecutar movimientos uno por uno
-                const moves = alg.split(' ');
-                const spokenMoves = algSpoken.split(',');
-
-                if (moves.length !== spokenMoves.length) {
-                    console.error("Error: El alg y alg_spoken no coinciden.", moves, spokenMoves);
-                    await speakPromise("Error. La guía de voz no coincide con el algoritmo.");
-                } else {
-                    for (let i = 0; i < moves.length; i++) {
-                        const move = moves[i].trim();
-                        const spokenMove = spokenMoves[i].trim();
-                        
-                        if (!move) continue; // Ignorar espacios vacíos
-
-                        // Decir el movimiento
-                        await speakPromise(spokenMove);
-                        // Ejecutar el movimiento
-                        await player.experimentalMove(move);
-                    }
-                }
-
-                // 5. Finalizar
-                await speakPromise("¡Y ya está! Completado.");
-
-            } catch (error) {
-                console.error("Error durante el tutorial:", error);
-                await speakPromise("Oh, algo ha salido mal.");
-            } finally {
-                // 6. Reactivar botones
-                isSpeaking = false;
-                document.querySelectorAll('.btn-tutorial').forEach(btn => {
-                    // Solo reactiva si TIENE un alg_spoken válido
-                    if (btn.dataset.algSpoken && btn.dataset.algSpoken.trim() !== '') {
-                        btn.disabled = false;
-                    }
-                });
-            }
-        }
-
-
-        // --- LÓGICA DE "EXPLORAR TODO" (Adaptada) ---
-
-        function updateBrowseTabs() {
-            browseTabs.forEach(tab => {
-                if (tab.dataset.category === currentBrowseCategory) {
-                    tab.classList.add('tab-btn-active');
-                    tab.classList.remove('tab-btn-inactive');
-                } else {
-                    tab.classList.add('tab-btn-inactive');
-                    tab.classList.remove('tab-btn-active');
-                }
-            });
-        }
-
-        function renderBrowseCategory(categoryKey) {
-            browseContentContainer.innerHTML = '';
-            browseLoading.style.display = 'none';
+        function initTimerView() {
+            loadSolves();
+            renderStats();
+            deleteSolvesBtn.onclick = deleteAllSolves;
+            timerDisplay.textContent = "0.00";
+            timerDisplay.classList.remove('text-green-500', 'text-cyan-400');
+            timerDisplay.classList.add('text-gray-100');
             
-            const data = allData[categoryKey];
-            if (!data) {
-                browseContentContainer.innerHTML = '<p class="text-center text-red-400 col-span-full">Error: No se encontraron datos.</p>';
+            // (NUEVO) Listeners para los pulsadores táctiles/mouse
+            // Mousedown/Touchstart
+            btnTimerLeft.addEventListener('mousedown', () => onThumbDown('left'));
+            btnTimerLeft.addEventListener('touchstart', (e) => { e.preventDefault(); onThumbDown('left'); });
+            btnTimerRight.addEventListener('mousedown', () => onThumbDown('right'));
+            btnTimerRight.addEventListener('touchstart', (e) => { e.preventDefault(); onThumbDown('right'); });
+            
+            // Mouseup/Touchend
+            btnTimerLeft.addEventListener('mouseup', () => onThumbUp('left'));
+            btnTimerLeft.addEventListener('touchend', (e) => { e.preventDefault(); onThumbUp('left'); });
+            btnTimerRight.addEventListener('mouseup', () => onThumbUp('right'));
+            btnTimerRight.addEventListener('touchend', (e) => { e.preventDefault(); onThumbUp('right'); });
+        }
+
+        /**
+         * 15. Maneja el evento de presionar tecla
+         */
+        function handleTimerKeydown(e) {
+            if (currentView !== 'timer') return; // Solo funciona en la vista de timer
+            
+            // Si el timer está corriendo, CUALQUIER tecla lo para
+            if (timerRunning) {
+                e.preventDefault();
+                stopTimer();
+                return; 
+            } 
+            
+            // Si es la barra espaciadora
+            if (e.code === 'Space' && !timerRunning) {
+                e.preventDefault();
+                onThumbDown('space'); // Usar el handler unificado
+            }
+        }
+
+        /**
+         * 16. Maneja el evento de soltar tecla
+         */
+        function handleTimerKeyup(e) {
+            if (currentView !== 'timer') return;
+            
+            // Si es la barra espaciadora
+            if (e.code === 'Space') {
+                e.preventDefault();
+                onThumbUp('space'); // Usar el handler unificado
+            }
+        }
+        
+        /**
+         * (NUEVO) Handler unificado para "botón presionado"
+         */
+        function onThumbDown(side) {
+            if (side === 'left') leftThumbDown = true;
+            if (side === 'right') rightThumbDown = true;
+            if (side === 'space') { // La barra espaciadora cuenta como ambos
+                leftThumbDown = true;
+                rightThumbDown = true;
+            }
+
+            // Si el timer está corriendo, parar inmediatamente
+            if (timerRunning) {
+                stopTimer();
+                return;
+            }
+            
+            // Si ambos están presionados y no está listo, ponerlo listo
+            if (leftThumbDown && rightThumbDown && !timerReady) {
+                prepareTimer();
+            }
+        }
+        
+        /**
+         * (NUEVO) Handler unificado para "botón soltado"
+         */
+        function onThumbUp(side) {
+            // Si el timer estaba listo (verde), empezar
+            if (timerReady) {
+                startTimer();
+                timerReady = false; // El timer ya no está listo, está corriendo
+            }
+            
+            if (side === 'left') leftThumbDown = false;
+            if (side === 'right') rightThumbDown = false;
+            if (side === 'space') { // La barra espaciadora suelta ambos
+                leftThumbDown = false;
+                rightThumbDown = false;
+            }
+        }
+
+        /**
+         * 17. Pone el timer en estado "listo" (verde)
+         */
+        function prepareTimer() {
+            timerReady = true;
+            timerDisplay.textContent = "0.00";
+            timerDisplay.classList.add('text-green-500');
+            timerDisplay.classList.remove('text-gray-100', 'text-cyan-400');
+        }
+
+        /**
+         * 18. Inicia el conteo del timer
+         */
+        function startTimer() {
+            timerReady = false;
+            timerRunning = true;
+            timerStartTime = Date.now();
+            
+            timerDisplay.classList.add('text-cyan-400');
+            timerDisplay.classList.remove('text-gray-100', 'text-green-500');
+
+            // Bucle de actualización
+            timerInterval = setInterval(() => {
+                const elapsedTime = (Date.now() - timerStartTime) / 1000;
+                timerDisplay.textContent = elapsedTime.toFixed(2);
+            }, 10); // Actualiza cada 10ms (centésimas)
+        }
+
+        /**
+         * 19. Detiene el timer y guarda el tiempo
+         */
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerReady = false; // (NUEVO) Resetea estados
+            leftThumbDown = false;
+            rightThumbDown = false;
+            
+            const finalTime = (Date.now() - timerStartTime) / 1000;
+            timerDisplay.textContent = finalTime.toFixed(2);
+            timerDisplay.classList.add('text-gray-100');
+            timerDisplay.classList.remove('text-green-500', 'text-cyan-400');
+            
+            addSolve(finalTime);
+        }
+
+        /**
+         * 20. Carga los tiempos desde localStorage
+         */
+        function loadSolves() {
+            solvesList = JSON.parse(localStorage.getItem(LS_KEYS.SOLVES) || '[]');
+        }
+
+        /**
+         * 21. Añade un tiempo a la lista y la guarda
+         */
+        function addSolve(time) {
+            solvesList.push(time);
+            localStorage.setItem(LS_KEYS.SOLVES, JSON.stringify(solvesList));
+            renderStats(); // Actualiza la UI
+        }
+
+        /**
+         * 22. Borra todos los tiempos
+         */
+        function deleteAllSolves() {
+            solvesList = [];
+            localStorage.removeItem(LS_KEYS.SOLVES);
+            renderStats(); // Actualiza la UI
+        }
+        
+        /**
+         * 23. Renderiza la lista de tiempos y las estadísticas
+         */
+        function renderStats() {
+            // Renderizar lista de tiempos
+            solvesListContainer.innerHTML = solvesList.map(time => 
+                `<span class="w-16 text-right">${time.toFixed(2)}</span>`
+            ).join('');
+            // Scroll al fondo
+            solvesListContainer.scrollTop = solvesListContainer.scrollHeight;
+
+            // Calcular y renderizar estadísticas
+            const count = solvesList.length;
+            if (count === 0) {
+                statsContainer.innerHTML = `
+                    <div class="col-span-2 text-center text-gray-400">Presiona espacio o los pulsadores para empezar.</div>
+                `;
                 return;
             }
 
-            const stickeringType = categoryKey.toUpperCase();
-
-            data.forEach(alg => {
-                const card = document.createElement('div');
-                // Clase 'alg-card'
-                card.className = "alg-card bg-gray-800 rounded-lg shadow-xl p-6 flex flex-col md:flex-row gap-6 items-start border border-gray-700";
-                card.dataset.algId = alg.id; // Para el botón de "aprendido"
-                
-                const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
-                
-                // --- (MODIFICADO) ---
-                const spokenAlg = generateSpokenAlg(alg.alg);
-                const hasSpokenAlg = spokenAlg !== "";
-                // --- (FIN MODIFICADO) ---
-                
-                const playerHtml = `
-                    <div class="w-full md:w-48 lg:w-56 flex-shrink-0">
-                        <twisty-player
-                            id="player-browse-${alg.id}"
-                            alg="${alg.alg}"
-                            ${setupHtml}
-                            experimental-stickering="${stickeringType}"
-                            control-panel
-                            experimental-arrows
-                        ></twisty-player>
-                    </div>
-                `;
-
-                const infoHtml = `
-                    <div class="w-full">
-                        <h3 class="text-2xl font-bold text-cyan-400">${alg.name} <span class="text-lg text-gray-400">(${alg.id})</span></h3>
-                        <h4 class="text-md font-semibold mt-3 text-gray-300">Algoritmo:</h4>
-                        <p class="font-mono text-lg text-yellow-300 my-1 break-all">${alg.alg}</p>
-                        <h4 class="text-md font-semibold mt-3 text-gray-300">Setup:</h4>
-                        <p class="font-mono text-gray-400 my-1 break-all">${alg.setup || 'N/A'}</p>
-                        <h4 class="text-md font-semibold mt-3 text-gray-300">Truco / Comentario:</h4>
-                        <p class="text-gray-200 mt-1 text-sm">${alg.trick}</p>
-
-                        <!-- Botón de Tutorial -->
-                        <button 
-                            class="btn-tutorial tab-btn-base w-full mt-4 btn-tutorial"
-                            data-alg-name="${alg.name}"
-                            data-alg-moves="${alg.alg}"
-                            data-alg-setup="${alg.setup || ''}"
-                            data-alg-spoken="${spokenAlg}"
-                            data-player-id="player-browse-${alg.id}"
-                            ${hasSpokenAlg ? '' : 'disabled'}
-                            title="${hasSpokenAlg ? 'Iniciar tutorial con voz' : 'Tutorial de voz no disponible (revisa el alg)'}">
-                            ${ICON_TUTORIAL}
-                        </button>
-                    </div>
-                `;
-                card.innerHTML = playerHtml + infoHtml;
-                browseContentContainer.appendChild(card);
-            });
+            const best = Math.min(...solvesList);
+            const worst = Math.max(...solvesList);
+            const ao5 = calculateAverage(5);
+            const ao12 = calculateAverage(12);
+            
+            statsContainer.innerHTML = `
+                ${renderStatCard('Mejor', best)}
+                ${renderStatCard('Peor', worst)}
+                ${renderStatCard('Media de 5', ao5)}
+                ${renderStatCard('Media de 12', ao12)}
+            `;
+        }
+        
+        /**
+         * 24. Helper para calcular media (Ao5, Ao12)
+         */
+        function calculateAverage(n) {
+            if (solvesList.length < n) return 'N/A';
+            
+            // Tomar los últimos n tiempos
+            const lastN = solvesList.slice(-n);
+            
+            // Ordenar para encontrar el mejor y peor
+            lastN.sort((a, b) => a - b);
+            
+            // Quitar el mejor (primero) y el peor (último)
+            const trimmedList = lastN.slice(1, -1);
+            
+            // Calcular la media
+            const sum = trimmedList.reduce((acc, time) => acc + time, 0);
+            const avg = sum / trimmedList.length;
+            
+            return avg.toFixed(2);
+        }
+        
+        /**
+         * 25. Helper para renderizar una tarjeta de estadística
+         */
+        function renderStatCard(label, value) {
+            return `
+                <div class="bg-gray-700 p-4 rounded-lg text-center">
+                    <div class="text-sm text-gray-400 uppercase">${label}</div>
+                    <div class="text-2xl font-bold text-cyan-400">${value}</div>
+                </div>
+            `;
         }
 
     </script>
