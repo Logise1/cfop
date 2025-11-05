@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso de CFOP (Cargado desde GitHub)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                    },
+                    colors: {
+                        'cubo-bg': '#111827',
+                        'cubo-nav': '#1f2937',
+                        'cubo-card': '#374151',
+                        'cubo-text': '#e5e7eb',
+                        'cubo-acento': '#818cf8',
+                        'cubo-activo': '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        
+        .nav-link {
+            @apply block w-full px-4 py-3 rounded-lg text-left font-medium text-cubo-text transition-all duration-200 ease-in-out;
+        }
+        .nav-link:hover {
+            @apply bg-cubo-card text-white;
+        }
+        .nav-link.active {
+            @apply bg-cubo-activo text-white font-bold shadow-lg;
+        }
+        .alg-card {
+            @apply bg-cubo-card rounded-2xl shadow-xl p-4 md:p-6 flex flex-col items-center transition-transform transform hover:scale-[1.02] duration-300;
+        }
+        twisty-player {
+            width: 180px;
+            height: 180px;
+            margin: 1rem auto;
+        }
+        .alg-code {
+            @apply block w-full bg-cubo-nav text-cubo-text font-mono text-center p-3 rounded-lg text-sm md:text-base break-words;
+            font-family: 'ui-monospace', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        }
+        .loading-placeholder {
+            @apply text-center text-cubo-text text-lg p-6;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="relative min-h-screen md:flex">
+        
+        <aside class="w-full md:w-64 bg-cubo-nav p-4 md:p-6 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+            <h1 class="text-2xl font-bold text-white text-center md:text-left mb-6">
+                Curso <span class="text-cubo-acento">CFOP</span>
+            </h1>
+            
+            <nav id="nav-menu" class="space-y-2">
+                <a href="#introduccion" class="nav-link active" data-target="introduccion">1. Introducción y Notación</a>
+                <a href="#cross" class="nav-link" data-target="cross">2. Cross (Cruz)</a>
+                <a href="#f2l" class="nav-link" data-target="f2l">3. F2L</a>
+                <a href="#oll" class="nav-link" data-target="oll">4. OLL</a>
+                <a href="#pll" class="nav-link" data-target="pll">5. PLL</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-4 md:p-10">
+
+            <section id="introduccion" class="content-section mb-16 space-y-8">
+                <h2 class="text-4xl font-bold text-cubo-acento mb-6 border-b border-gray-700 pb-2">1. Introducción y Notación</h2>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-white mb-4">¿Qué es CFOP?</h3>
+                    <p class="text-lg leading-relaxed">
+                        El método CFOP (Cross, F2L, OLL, PLL), también conocido como método Fridrich, es el método más popular para resolver el Cubo de Rubik 3x3x3 rápidamente (speedcubing).
+                    </p>
+                    <ul class="list-disc list-inside mt-4 space-y-2 text-lg">
+                        <li><strong>C: Cross (Cruz):</strong> Resolver la cruz de la primera capa.</li>
+                        <li><strong>F: F2L (First Two Layers):</strong> Resolver las primeras dos capas simultáneamente.</li>
+                        <li><strong>O: OLL (Orient Last Layer):</strong> Orientar todas las piezas de la última capa.</li>
+                        <li><strong>P: PLL (Permute Last Layer):</strong> Permutar (colocar en su sitio) las piezas de la última capa.</li>
+                    </ul>
+                </div>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-white mb-4">Notación del Cubo</h3>
+                    <p class="text-lg mb-6">La notación se basa en la cara que giras (en inglés):</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-center">
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>R</strong> (Right)</div>
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>L</strong> (Left)</div>
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>U</strong> (Up)</div>
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>D</strong> (Down)</div>
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>F</strong> (Front)</div>
+                        <div class="bg-cubo-nav p-3 rounded-md"><strong>B</strong> (Back)</div>
+                    </div>
+                    <p class="text-lg mt-6">
+                        Un apóstrofo (<strong>'</strong>) significa giro antihorario (Ej: <strong>R'</strong>).<br>
+                        Un <strong>2</strong> significa giro doble (Ej: <strong>U2</strong>).<br>
+                        Letras minúsculas (ej: <strong>r</strong>) significan girar dos capas (la cara y su capa central).
+                    </p>
+                </div>
+            </section>
+
+            <section id="cross" class="content-section mb-16">
+                <h2 class="text-4xl font-bold text-cubo-acento mb-6 border-b border-gray-700 pb-2">2. La Cruz (Cross)</h2>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <p class="text-lg leading-relaxed">
+                        El primer paso es construir una cruz en la cara inferior (normalmente la blanca), asegurándote de que los colores de las aristas coincidan con los centros adyacentes.
+                    </p>
+                    <p class="text-lg leading-relaxed mt-4">
+                        Este paso es <strong>casi 100% intuitivo</strong> y no requiere algoritmos específicos. La clave es practicar para hacerla de la forma más eficiente posible (idealmente en 8 movimientos o menos).
+                    </p>
+                </div>
+            </section>
+
+            <section id="f2l" class="content-section mb-16 space-y-8">
+                <h2 class="text-4xl font-bold text-cubo-acento mb-6 border-b border-gray-700 pb-2">3. F2L (Primeras Dos Capas)</h2>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <p class="text-lg leading-relaxed">
+                        Aquí resuelves las primeras dos capas a la vez. Buscas una esquina y su arista correspondiente, las unes en la capa superior (U) y las insertas en su "slot" (hueco) correcto.
+                    </q>
+                    <p class="text-lg leading-relaxed mt-4">
+                        Hay 41 casos principales. Aquí tienes los casos básicos:
+                    </p>
+                </div>
+                
+                <div id="f2l-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <p class="loading-placeholder col-span-full">Cargando algoritmos F2L...</p>
+                </div>
+            </section>
+
+            <section id="oll" class="content-section mb-16 space-y-8">
+                <h2 class="text-4xl font-bold text-cubo-acento mb-6 border-b border-gray-700 pb-2">4. OLL (Orientar Última Capa)</h2>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <p class="text-lg leading-relaxed">
+                        El objetivo es dejar toda la última capa (cara U, amarilla) de un solo color. Hay 57 casos para este paso.
+                    </p>
+                </div>
+                
+                <div id="oll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <p class="loading-placeholder col-span-full">Cargando 57 algoritmos OLL...</p>
+                </div>
+            </section>
+            
+            <section id="pll" class="content-section mb-16 space-y-8">
+                <h2 class="text-4xl font-bold text-cubo-acento mb-6 border-b border-gray-700 pb-2">5. PLL (Permutar Última Capa)</h2>
+                <div class="bg-cubo-card p-6 rounded-lg shadow-lg">
+                    <p class="text-lg leading-relaxed">
+                        ¡El último paso! La cara amarilla ya está completa, pero las piezas no están en su sitio. Hay 21 casos para este paso.
+                    </p>
+                </div>
+                
+                <div id="pll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <p class="loading-placeholder col-span-full">Cargando 21 algoritmos PLL...</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- INICIO DE LA LÓGICA DE CARGA DE JSON ---
+
+            // 1. Esta es la URL de tu archivo JSON en GitHub
+            const jsonUrl = 'https://logise1.github.io/cfop/cfop.json'; 
+            
+            // 2. Elementos del DOM donde cargaremos las tarjetas
+            const f2lGrid = document.getElementById('f2l-grid');
+            const ollGrid = document.getElementById('oll-grid');
+            const pllGrid = document.getElementById('pll-grid');
+
+            // 3. Función para crear la tarjeta de un algoritmo
+            function createAlgCard(caso, tipo) {
+                // F2L usa 'experimental-setup-alg' con el alg de setup
+                // OLL y PLL usan 'experimental-setup-anchor="end"' para calcularlo solo
+                let setupHtml = (tipo === 'F2L') 
+                    ? `experimental-setup-alg="${caso.setup || ''}"`
+                    : `experimental-setup-anchor="end"`;
+
+                // Sanitizar el algoritmo para mostrarlo (evitar problemas con comillas)
+                const algDisplay = caso.alg.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+
+                return `
+                <div class="alg-card">
+                    <h3 class="font-bold text-xl md:text-2xl mb-1 text-white">${caso.id}</h3>
+                    <p class="text-sm text-gray-300 mb-2">(${caso.name})</p>
+                    <twisty-player
+                        experimental-stickering="${tipo}"
+                        ${setupHtml}
+                        alg="${algDisplay}"
+                        control-panel
+                        experimental-arrows
+                    ></twisty-player>
+                    <code class="alg-code">${algDisplay}</code>
+                </div>
+                `;
+            }
+
+            // 4. Función principal para cargar y renderizar los algoritmos
+            async function loadAlgorithms() {
+                try {
+                    const response = await fetch(jsonUrl);
+                    if (!response.ok) {
+                        throw new Error(`Error de red: ${response.status} ${response.statusText}`);
+                    }
+                    const data = await response.json();
+
+                    // Limpiar los contenedores
+                    f2lGrid.innerHTML = '';
+                    ollGrid.innerHTML = '';
+                    pllGrid.innerHTML = '';
+
+                    // Cargar F2L
+                    data.f2l.forEach(caso => {
+                        f2lGrid.innerHTML += createAlgCard(caso, 'F2L');
+                    });
+
+                    // Cargar OLL
+                    data.oll.forEach(caso => {
+                        ollGrid.innerHTML += createAlgCard(caso, 'OLL');
+                    });
+
+                    // Cargar PLL
+                    data.pll.forEach(caso => {
+                        pllGrid.innerHTML += createAlgCard(caso, 'PLL');
+                    });
+
+                } catch (error) {
+                    console.error('Error al cargar los algoritmos:', error);
+                    const errorMsg = '<p class="text-red-400 text-center col-span-full">Error al cargar algoritmos. Revisa la URL del JSON y la conexión.</p>';
+                    f2lGrid.innerHTML = errorMsg;
+                    ollGrid.innerHTML = errorMsg;
+                    pllGrid.innerHTML = errorMsg;
+                }
+            }
+
+            // 5. Llamar a la función de carga
+            loadAlgorithms();
+
+            // --- FIN DE LA LÓGICA DE CARGA DE JSON ---
+
+
+            // --- Lógica del Scrollspy (Navegación activa) ---
+            const sections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('#nav-menu .nav-link');
+
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        
+                        const targetId = entry.target.id;
+                        const activeLink = document.querySelector(`#nav-menu .nav-link[data-target="${targetId}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // Lógica futura para menú hamburguesa
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
