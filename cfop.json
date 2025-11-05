@@ -4,101 +4,494 @@
       "id": "F2L Básico 1",
       "name": "Inserción Básica",
       "alg": "U R U' R'",
-      "setup": "R U R' U'"
+      "setup": "R U R' U'",
+      "trick": "El 'Sexy Move' de toda la vida. Rápido y fácil de hacer con la mano derecha. El par ya está hecho."
     },
     {
       "id": "F2L Básico 2",
       "name": "Inserción con F",
       "alg": "U' F' U F",
-      "setup": "F' U' F U"
+      "setup": "F' U' F U",
+      "trick": "Piensa en esto como un 'Sledgehammer' pero al revés (F' U F). Ideal para insertar sin rotar el cubo."
     },
     {
       "id": "F2L Básico 3",
       "name": "Unir Par (Blanco arriba)",
       "alg": "R U R' U' R U R'",
-      "setup": "R U' R' U R U' R'"
+      "setup": "R U' R' U R U' R'",
+      "trick": "El blanco (o color de arriba) mira hacia arriba. Separa la esquina (R U R'), escóndela (U'), y vuelve a insertarla (R U R')."
     }
   ],
   "oll": [
-    { "id": "OLL 1", "name": "Cruz", "alg": "R U2' R' U' R U' R' U' R U R' U' R U' R'" },
-    { "id": "OLL 2", "name": "Cruz", "alg": "F R U R' U' F' f R U R' U' f'" },
-    { "id": "OLL 3", "name": "Cruz", "alg": "f R U R' U' f' U' F R U R' U' F'" },
-    { "id": "OLL 4", "name": "Cruz", "alg": "f R U R' U' f' U F R U R' U' F'" },
-    { "id": "OLL 5", "name": "Puntos", "alg": "r' U2' R U R' U r" },
-    { "id": "OLL 6", "name": "Puntos", "alg": "r U2 R' U' R U' r'" },
-    { "id": "OLL 7", "name": "Puntos", "alg": "r U R' U R U2 r'" },
-    { "id": "OLL 8", "name": "Puntos", "alg": "r' U' R U' R' U2 r" },
-    { "id": "OLL 9", "name": "Relámpago (L)", "alg": "R U R' U' R' F R F' U2 R' F R F'" },
-    { "id": "OLL 10", "name": "Relámpago (L)", "alg": "R U R' U R' F R F' R U2' R'" },
-    { "id": "OLL 11", "name": "L", "alg": "r' R2 U R' U R U2 R' U M'" },
-    { "id": "OLL 12", "name": "L", "alg": "F R U R' U' F' U F R U R' U' F'" },
-    { "id": "OLL 13", "name": "L", "alg": "F U R U' R' F'" },
-    { "id": "OLL 14", "name": "L", "alg": "R' F R U R' F' R F U' F'" },
-    { "id": "OLL 15", "name": "L", "alg": "r' U' r R' U' R U r' U r" },
-    { "id": "OLL 16", "name": "L", "alg": "r U r' R U R' U' r U' r'" },
-    { "id": "OLL 17", "name": "Cuadrado", "alg": "R U R' U R' F R F' U2 R' F R F'" },
-    { "id": "OLL 18", "name": "Cuadrado", "alg": "R U2 R' U' R U' R' U2 F R U R' U' F'" },
-    { "id": "OLL 19", "name": "Cuadrado", "alg": "R U R' U' R' F R F' U2 F R U R' U' F'" },
-    { "id": "OLL 20", "name": "Esquinas", "alg": "R U2 R' U2 R' F R F'" },
-    { "id": "OLL 21", "name": "H", "alg": "R U2 R' U' R U R' U' R U' R'" },
-    { "id": "OLL 22", "name": "Pi", "alg": "R U2' R2 U' R2 U' R2 U2' R" },
-    { "id": "OLL 23", "name": "Pi", "alg": "R2' U' R U' R' U2 R U' R' U R'" },
-    { "id": "OLL 24", "name": "T", "alg": "R U R' U' R' F R F'" },
-    { "id": "OLL 25", "name": "T", "alg": "F R U' R' U R U R' F'" },
-    { "id": "OLL 26", "name": "Anti-Sune", "alg": "R U2' R' U' R U' R'" },
-    { "id": "OLL 27", "name": "Sune", "alg": "R U R' U R U2' R'" },
-    { "id": "OLL 28", "name": "C", "alg": "R U R' U' R U R' U' R' F R F'" },
-    { "id": "OLL 29", "name": "C", "alg": "R U R' U' x U' R' U l' U" },
-    { "id": "OLL 30", "name": "P", "alg": "F U R U' R' U R U' R' F'" },
-    { "id": "OLL 31", "name": "P", "alg": "R' F' U' F U R" },
-    { "id": "OLL 32", "name": "P", "alg": "R U B' U' R' U R B R'" },
-    { "id": "OLL 33", "name": "P", "alg": "R U R' U' R' F R F'" },
-    { "id": "OLL 34", "name": "P", "alg": "R' U' F U R U' R' F' R" },
-    { "id": "OLL 35", "name": "W", "alg": "R U R' U' R' F R F' U R U' R'" },
-    { "id": "OLL 36", "name": "W", "alg": "L' U' L U' L F' L' F U2 L F' L' F" },
-    { "id": "OLL 37", "name": "W", "alg": "F R U' R' U R U R' F'" },
-    { "id": "OLL 38", "name": "W", "alg": "R U R' U R U' R' U' R' F R F'" },
-    { "id": "OLL 39", "name": "Caballero", "alg": "L F' L' U' L U F U' L'" },
-    { "id": "OLL 40", "name": "Caballero", "alg": "R' F R U R' U' F' U R" },
-    { "id": "OLL 41", "name": "Caballero", "alg": "R U R' U R U2 R' F R U R' U' F'" },
-    { "id": "OLL 42", "name": "Caballero", "alg": "R' U' R U' R' U2 R F R U R' U' F'" },
-    { "id": "OLL 43", "name": "L Pequeña", "alg": "F' U' L' U L F" },
-    { "id": "OLL 44", "name": "L Pequeña", "alg": "F U R U' R' F'" },
-    { "id": "OLL 45", "name": "L Pequeña", "alg": "R U R' U' R' F R F'" },
-    { "id": "OLL 46", "name": "L Pequeña", "alg": "R' U' R' F R F' U R" },
-    { "id": "OLL 47", "name": "Flecha", "alg": "F' L' U' L U L' U' L U F" },
-    { "id": "OLL 48", "name": "Flecha", "alg": "F R U R' U' R U R' U' F'" },
-    { "id": "OLL 49", "name": "I", "alg": "R' U' R U' R' U R U R B' R' B" },
-    { "id": "OLL 50", "name": "I", "alg": "R U R' U R U' R' U' R' F R F'" },
-    { "id": "OLL 51", "name": "I", "alg": "f R U R' U' R U R' U' f'" },
-    { "id": "OLL 52", "name": "I", "alg": "R U R' U R U' b' R' b" },
-    { "id": "OLL 53", "name": "Rayos", "alg": "r' U' R U' R' U R U' R' U2 r" },
-    { "id": "OLL 54", "name": "Rayos", "alg": "r U R' U R U' R' U R U2' r'" },
-    { "id": "OLL 55", "name": "Coche", "alg": "R U2' R2 U' R U' R' U2 F R F'" },
-    { "id": "OLL 56", "name": "Coche", "alg": "r' U' r U' R' U R r' U r" },
-    { "id": "OLL 57", "name": "Línea", "alg": "R U R' U' M' U R U' r'" }
+    {
+      "id": "OLL 1",
+      "name": "Cruz",
+      "alg": "R U2' R' U' R U' R' U' R U R' U' R U' R'",
+      "trick": "Es un Sune, U2, y luego un Sune zurdo. Reconócelo por los 'faros' opuestos en los lados."
+    },
+    {
+      "id": "OLL 2",
+      "name": "Cruz",
+      "alg": "F R U R' U' F' f R U R' U' f'",
+      "trick": "Un Sledgehammer (F R U R' U' F'), seguido de un 'Sexy Sledge' (f R U R' U' f'). ¡Dos en uno!"
+    },
+    {
+      "id": "OLL 3",
+      "name": "Cruz",
+      "alg": "f R U R' U' f' U' F R U R' U' F'",
+      "trick": "Es el OLL 2 pero al revés: primero el 'Sexy Sledge' y luego el Sledgehammer normal."
+    },
+    {
+      "id": "OLL 4",
+      "name": "Cruz",
+      "alg": "f R U R' U' f' U F R U R' U' F'",
+      "trick": "Empieza con 'Sexy Sledge' y termina con un Sledge pero con U en medio. Fluye bastante bien."
+    },
+    {
+      "id": "OLL 5",
+      "name": "Puntos",
+      "alg": "r' U2' R U R' U r",
+      "trick": "Parece que te miran dos 'ojos' desde la izquierda. Ejecuta el giro 'r' suavemente."
+    },
+    {
+      "id": "OLL 6",
+      "name": "Puntos",
+      "alg": "r U2 R' U' R U' r'",
+      "trick": "El espejo del OLL 5. Los 'ojos' te miran desde la derecha."
+    },
+    {
+      "id": "OLL 7",
+      "name": "Puntos",
+      "alg": "r U R' U R U2 r'",
+      "trick": "Es como un 'Sune' pero empezando con 'r' (giro ancho). Fíjate en el bloque 1x2 a la izquierda."
+    },
+    {
+      "id": "OLL 8",
+      "name": "Puntos",
+      "alg": "r' U' R U' R' U2 r",
+      "trick": "El espejo del OLL 7. Como un 'Anti-Sune' ancho. El bloque 1x2 está a la derecha."
+    },
+    {
+      "id": "OLL 9",
+      "name": "Relámpago (L)",
+      "alg": "R U R' U' R' F R F' U2 R' F R F'",
+      "trick": "Un Sexy Move, seguido de un Sledgehammer, U2, y otro Sledgehammer. Es largo, pero rítmico."
+    },
+    {
+      "id": "OLL 10",
+      "name": "Relámpago (L)",
+      "alg": "R U R' U R' F R F' R U2' R'",
+      "trick": "Parecido a un Sune al principio, pero se convierte en Sledge. El U2' R' final es rápido."
+    },
+    {
+      "id": "OLL 11",
+      "name": "L",
+      "alg": "r' R2 U R' U R U2 R' U M'",
+      "trick": "Reconócelo por la 'L' y el bloque 1x2 a la derecha. El final con M' es peculiar."
+    },
+    {
+      "id": "OLL 12",
+      "name": "L",
+      "alg": "F R U R' U' F' U F R U R' U' F'",
+      "trick": "Un Sledgehammer, seguido de U, y otro Sledgehammer. Fácil de recordar: Sledge, U, Sledge."
+    },
+    {
+      "id": "OLL 13",
+      "name": "L",
+      "alg": "F U R U' R' F'",
+      "trick": "Casi un Sledgehammer, pero el segundo U es normal. Muy rápido. (F, Sexy, F')."
+    },
+    {
+      "id": "OLL 14",
+      "name": "L",
+      "alg": "R' F R U R' F' R F U' F'",
+      "trick": "Este fluye muy bien con la mano derecha. Fíjate en el doble movimiento F... F'."
+    },
+    {
+      "id": "OLL 15",
+      "name": "L",
+      "alg": "r' U' r R' U' R U r' U r",
+      "trick": "Una inserción ancha (r' U' r) seguida de una inserción normal. Se siente como 'meter y sacar'."
+    },
+    {
+      "id": "OLL 16",
+      "name": "L",
+      "alg": "r U r' R U R' U' r U' r'",
+      "trick": "El espejo del OLL 15. Inserción ancha (r U r') y luego la inserción normal."
+    },
+    {
+      "id": "OLL 17",
+      "name": "Cuadrado",
+      "alg": "R U R' U R' F R F' U2 R' F R F'",
+      "trick": "Empieza como un Sune (R U R' U), luego se transforma. Es largo, busca el ritmo."
+    },
+    {
+      "id": "OLL 18",
+      "name": "Cuadrado",
+      "alg": "R U2 R' U' R U' R' U2 F R U R' U' F'",
+      "trick": "Un Anti-Sune (R U2 R' U' R U' R'), U2, y un Sledgehammer. Sencillo de partir en dos."
+    },
+    {
+      "id": "OLL 19",
+      "name": "Cuadrado",
+      "alg": "R U R' U' R' F R F' U2 F R U R' U' F'",
+      "trick": "Un Sexy Move, un Sledge, U2, y otro Sledge. ¡Muchos Sledges!"
+    },
+    {
+      "id": "OLL 20",
+      "name": "Esquinas",
+      "alg": "R U2 R' U2 R' F R F'",
+      "trick": "El famoso 'Niklas'. Reconocible por solo dos esquinas orientadas, en diagonal. El R' F R F' del final es un Sledge."
+    },
+    {
+      "id": "OLL 21",
+      "name": "H",
+      "alg": "R U2 R' U' R U R' U' R U' R'",
+      "trick": "El caso 'H'. Imagina que haces un Anti-Sune (R U2 R' U' R U' R') pero le añades (U' R U' R') al final."
+    },
+    {
+      "id": "OLL 22",
+      "name": "Pi",
+      "alg": "R U2' R2 U' R2 U' R2 U2' R",
+      "trick": "El 'Pi'. Reconocido por los dos bloques 1x2 ('faros') a los lados. Puro movimiento R y U."
+    },
+    {
+      "id": "OLL 23",
+      "name": "Pi",
+      "alg": "R2' U' R U' R' U2 R U' R' U R'",
+      "trick": "El espejo del 'Pi'. Los 'faros' están al frente y atrás. También puro R y U."
+    },
+    {
+      "id": "OLL 24",
+      "name": "T",
+      "alg": "R U R' U' R' F R F'",
+      "trick": "¡El T-Perm... pero para OLL! Es un Sexy Move (R U R' U') seguido de un Sledgehammer (R' F R F')."
+    },
+    {
+      "id": "OLL 25",
+      "name": "T",
+      "alg": "F R U' R' U R U R' F'",
+      "trick": "El 'Bruno'. El espejo del OLL 24. Empieza con F y fluye muy bien."
+    },
+    {
+      "id": "OLL 26",
+      "name": "Anti-Sune",
+      "alg": "R U2' R' U' R U' R'",
+      "trick": "El Anti-Sune. La esquina resuelta está al frente-izquierda. Fácil de 'spamear' y muy rápido."
+    },
+    {
+      "id": "OLL 27",
+      "name": "Sune",
+      "alg": "R U R' U R U2' R'",
+      "trick": "El Sune. El algoritmo más famoso. La esquina resuelta está al frente-derecha. Fluye solo."
+    },
+    {
+      "id": "OLL 28",
+      "name": "C",
+      "alg": "R U R' U' R U R' U' R' F R F'",
+      "trick": "Dos Sexy Moves (R U R' U' R U R' U') seguidos de un Sledgehammer (R' F R F')."
+    },
+    {
+      "id": "OLL 29",
+      "name": "C",
+      "alg": "R U R' U' x U' R' U l' U",
+      "trick": "Un Sexy Move, rotas (x), y luego una inserción trasera. Raro pero efectivo."
+    },
+    {
+      "id": "OLL 30",
+      "name": "P",
+      "alg": "F U R U' R' U R U' R' F'",
+      "trick": "Es un 'Sune' pero hecho con F en lugar de R. (F, y luego un Sune con U/R, y F')."
+    },
+    {
+      "id": "OLL 31",
+      "name": "P",
+      "alg": "R' F' U' F U R",
+      "trick": "Un Sledgehammer (R' F' U' F) pero con U R al final. Muy corto y rápido."
+    },
+    {
+      "id": "OLL 32",
+      "name": "P",
+      "alg": "R U B' U' R' U R B R'",
+      "trick": "Es un 'Sune' pero hecho desde atrás (con B). Para valientes."
+    },
+    {
+      "id": "OLL 33",
+      "name": "P",
+      "alg": "R U R' U' R' F R F'",
+      "trick": "Un Sexy Move (R U R' U') seguido de un Sledgehammer (R' F R F'). ¡Idéntico al OLL 24 (T)!"
+    },
+    {
+      "id": "OLL 34",
+      "name": "P",
+      "alg": "R' U' F U R U' R' F' R",
+      "trick": "Este fluye muy bien. Es como sacar una pieza (R' U' F) y volver a meterla (U R...)."
+    },
+    {
+      "id": "OLL 35",
+      "name": "W",
+      "alg": "R U R' U' R' F R F' U R U' R'",
+      "trick": "Un Sexy Move (R U R' U'), un Sledge (R' F R F'), y otro Sexy (U R U' R')."
+    },
+    {
+      "id": "OLL 36",
+      "name": "W",
+      "alg": "L' U' L U' L F' L' F U2 L F' L' F",
+      "trick": "El espejo del 35, pero para la mano izquierda. Bastante incómodo para diestros."
+    },
+    {
+      "id": "OLL 37",
+      "name": "W",
+      "alg": "F R U' R' U R U R' F'",
+      "trick": "Es el OLL 25 ('Bruno') pero con un U' al principio. (F R U' R'...) en lugar de (F R U...)."
+    },
+    {
+      "id": "OLL 38",
+      "name": "W",
+      "alg": "R U R' U R U' R' U' R' F R F'",
+      "trick": "Empieza como un Sune (R U R' U R U' R') pero el U' final se cancela con un Sledge."
+    },
+    {
+      "id": "OLL 39",
+      "name": "Caballero",
+      "alg": "L F' L' U' L U F U' L'",
+      "trick": "El movimiento de 'Caballo' (Knight move) para la mano izquierda. El F' U' L U F fluye bien."
+    },
+    {
+      "id": "OLL 40",
+      "name": "Caballero",
+      "alg": "R' F R U R' U' F' U R",
+      "trick": "El espejo del 39, para la mano derecha. (R' F R U...) es un 'fingertrick' común."
+    },
+    {
+      "id": "OLL 41",
+      "name": "Caballero",
+      "alg": "R U R' U R U2 R' F R U R' U' F'",
+      "trick": "Un Sune (R U R' U R U2 R') seguido de un Sledgehammer (F R U R' U' F'). ¡Sune + Sledge!"
+    },
+    {
+      "id": "OLL 42",
+      "name": "Caballero",
+      "alg": "R' U' R U' R' U2 R F R U R' U' F'",
+      "trick": "Un Anti-Sune (R' U' R U' R' U2 R) seguido de un Sledge. ¡Anti-Sune + Sledge!"
+    },
+    {
+      "id": "OLL 43",
+      "name": "L Pequeña",
+      "alg": "F' U' L' U L F",
+      "trick": "Inserción súper rápida para la mano izquierda. (F' y luego un Sexy zurdo F)."
+    },
+    {
+      "id": "OLL 44",
+      "name": "L Pequeña",
+      "alg": "F U R U' R' F'",
+      "trick": "El espejo del 43. Inserción rápida con la derecha. (F y luego un Sexy F')."
+    },
+    {
+      "id": "OLL 45",
+      "name": "L Pequeña",
+      "alg": "R U R' U' R' F R F'",
+      "trick": "¡Es el T-Perm (OLL 24) otra vez! Un Sexy Move (R U R' U') seguido de un Sledge (R' F R F')."
+    },
+    {
+      "id": "OLL 46",
+      "name": "L Pequeña",
+      "alg": "R' U' R' F R F' U R",
+      "trick": "Empieza como un Sledge (R' F R F') pero se interrumpe. El U R final lo arregla."
+    },
+    {
+      "id": "OLL 47",
+      "name": "Flecha",
+      "alg": "F' L' U' L U L' U' L U F",
+      "trick": "Doble inserción con la izquierda. Es como el 43 pero repitiendo el (L' U' L U)."
+    },
+    {
+      "id": "OLL 48",
+      "name": "Flecha",
+      "alg": "F R U R' U' R U R' U' F'",
+      "trick": "Doble inserción con la derecha. Es el 44 (F, Sexy, F') pero con otro Sexy en medio."
+    },
+    {
+      "id": "OLL 49",
+      "name": "I",
+      "alg": "R' U' R U' R' U R U R B' R' B",
+      "trick": "Un algoritmo muy 'trasero'. Si no te gusta la B, busca alternativas."
+    },
+    {
+      "id": "OLL 50",
+      "name": "I",
+      "alg": "R U R' U R U' R' U' R' F R F'",
+      "trick": "Empieza como un Sune (R U R' U R U' R') y termina con un Sledge (R' F R F')."
+    },
+    {
+      "id": "OLL 51",
+      "name": "I",
+      "alg": "f R U R' U' R U R' U' f'",
+      "trick": "El 'Sexy Sledge' (f R U R' U' f') pero con un Sexy Move (R U R' U') metido en medio. Muy fluido."
+    },
+    {
+      "id": "OLL 52",
+      "name": "I",
+      "alg": "R U R' U R U' b' R' b",
+      "trick": "Otro algoritmo 'trasero'. La 'b' minúscula es un giro de B ancho. Raro."
+    },
+    {
+      "id": "OLL 53",
+      "name": "Rayos",
+      "alg": "r' U' R U' R' U R U' R' U2 r",
+      "trick": "Un 'Anti-Sune ancho'. Empieza con r' y termina con r. Fíjate en el doble U' R'."
+    },
+    {
+      "id": "OLL 54",
+      "name": "Rayos",
+      "alg": "r U R' U R U' R' U R U2' r'",
+      "trick": "Un 'Sune ancho'. Empieza con r y termina con r'. Espejo del 53."
+    },
+    {
+      "id": "OLL 55",
+      "name": "Coche",
+      "alg": "R U2' R2 U' R U' R' U2 F R F'",
+      "trick": "El 'Coche'. Reconocible por los 'faros' al frente. El R2 U' R U' R' fluye bien antes del Sledge."
+    },
+    {
+      "id": "OLL 56",
+      "name": "Coche",
+      "alg": "r' U' r U' R' U R r' U r",
+      "trick": "Alternativa al 55. Se siente como 'meter y sacar' dos veces con giros anchos."
+    },
+    {
+      "id": "OLL 57",
+      "name": "Línea",
+      "alg": "R U R' U' M' U R U' r'",
+      "trick": "El último OLL. Un Sexy Move (R U R' U'), y luego un (M' U R U' r'). El M' U R U' r' es un 'fingertrick' genial."
+    }
   ],
   "pll": [
-    { "id": "PLL Aa", "name": "Perm Aa", "alg": "x' R' U R' D2 R U' R' D2 R2 x" },
-    { "id": "PLL Ab", "name": "Perm Ab", "alg": "x R2 D2 R U R' D2 R U' R x'" },
-    { "id": "PLL E", "name": "Perm E", "alg": "x' R U' R' D R U R' D' R U R' D R U' R' D' x" },
-    { "id": "PLL F", "name": "Perm F", "alg": "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R" },
-    { "id": "PLL Ga", "name": "Perm Ga", "alg": "R2 U R' U R' U' R U' R2 U' D R' U R D'" },
-    { "id": "PLL Gb", "name": "Perm Gb", "alg": "R' U' R U D' R2 U R' U R U' R U' R2' D" },
-    { "id": "PLL Gc", "name": "Perm Gc", "alg": "R2 U' R U' R U R' U R2 U D' R U' R' D" },
-    { "id": "PLL Gd", "name": "Perm Gd", "alg": "R U R' U' D R2 U' R U' R' U R' U R2 D'" },
-    { "id": "PLL H", "name": "Perm H", "alg": "M2' U M2' U2 M2' U M2'" },
-    { "id": "PLL Ja", "name": "Perm Ja", "alg": "R' U L' U2 R U' R' U2 R L" },
-    { "id": "PLL Jb", "name": "Perm Jb", "alg": "R U R' F' R U R' U' R' F R2 U' R'" },
-    { "id": "PLL Na", "name": "Perm Na", "alg": "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'" },
-    { "id": "PLL Nb", "name": "Perm Nb", "alg": "R' U R U' R' F' U' F R U R' F R' F' R U' R" },
-    { "id": "PLL Ra", "name": "Perm Ra", "alg": "R U R' F' R U2 R' U2 R' F R U R U2 R'" },
-    { "id": "PLL Rb", "name": "Perm Rb", "alg": "R' U2 R U2 R' F R U R' U' R' F' R2" },
-    { "id": "PLL T", "name": "Perm T", "alg": "R U R' U' R' F R2 U' R' U' R U R' F'" },
-    { "id": "PLL Ua", "name": "Perm Ua", "alg": "M2' U M U2 M' U M2'" },
-    { "id": "PLL Ub", "name": "Perm Ub", "alg": "M2' U' M U2 M' U' M2'" },
-    { "id": "PLL V", "name": "Perm V", "alg": "R' U R' U' y R' F' R2 U' R' U R' F R F" },
-    { "id": "PLL Y", "name": "Perm Y", "alg": "F R U' R' U' R U R' F' R U R' U' R' F R F'" },
-    { "id": "PLL Z", "name": "Perm Z", "alg": "M2' U M2' U M' U2 M2' U2 M'" }
+    {
+      "id": "PLL Aa",
+      "name": "Perm Aa",
+      "alg": "x' R' U R' D2 R U' R' D2 R2 x",
+      "trick": "Perm A 'zurdo'. Busca el bloque 2x1x1 resuelto y ponlo atrás. La rotación x' ayuda a verlo. El D2 es clave."
+    },
+    {
+      "id": "PLL Ab",
+      "name": "Perm Ab",
+      "alg": "x R2 D2 R U R' D2 R U' R x'",
+      "trick": "Perm A 'diestro'. El bloque resuelto atrás. Es el espejo del Aa. (x R2 D2...)"
+    },
+    {
+      "id": "PLL E",
+      "name": "Perm E",
+      "alg": "x' R U' R' D R U R' D' R U R' D R U' R' D' x",
+      "trick": "El Perm E... paciencia. Es largo, pero simétrico. Fíjate en que las esquinas opuestas se intercambian. Es (R U' R' D) (R U R' D') repetido."
+    },
+    {
+      "id": "PLL F",
+      "name": "Perm F",
+      "alg": "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R",
+      "trick": "Un Sledgehammer al principio (R' U' F'), luego un montón de R y U. Reconócelo por los 'faros' y dos aristas opuestas."
+    },
+    {
+      "id": "PLL Ga",
+      "name": "Perm Ga",
+      "alg": "R2 U R' U R' U' R U' R2 U' D R' U R D'",
+      "trick": "Perm G. Bloque resuelto a la izquierda. Las aristas van en contra de las agujas del reloj. El D' al final es clave."
+    },
+    {
+      "id": "PLL Gb",
+      "name": "Perm Gb",
+      "alg": "R' U' R U D' R2 U R' U R U' R U' R2' D",
+      "trick": "Perm G. Bloque resuelto a la derecha. Las esquinas van en sentido horario. El (R' U' R U D') inicial es rápido."
+    },
+    {
+      "id": "PLL Gc",
+      "name": "Perm Gc",
+      "alg": "R2 U' R U' R U R' U R2 U D' R U' R' D",
+      "trick": "Perm G. Bloque resuelto a la izquierda. Las aristas van en sentido horario. Espejo del Ga."
+    },
+    {
+      "id": "PLL Gd",
+      "name": "Perm Gd",
+      "alg": "R U R' U' D R2 U' R U' R' U R' U R2 D'",
+      "trick": "Perm G. Bloque resuelto a la derecha. Las esquinas van en sentido anti-horario. El (R U R' U' D) inicial es un Sexy Move + D."
+    },
+    {
+      "id": "PLL H",
+      "name": "Perm H",
+      "alg": "M2' U M2' U2 M2' U M2'",
+      "trick": "El Perm H. Intercambia aristas opuestas. Súper rápido: (M2' U) (M2' U2) (M2' U) (M2'). ¡Puro 'slice'!"
+    },
+    {
+      "id": "PLL Ja",
+      "name": "Perm Ja",
+      "alg": "R' U L' U2 R U' R' U2 R L",
+      "trick": "Perm J. Intercambio de bloque con L. El (R' U L') inicial es un poco raro, pero el resto fluye."
+    },
+    {
+      "id": "PLL Jb",
+      "name": "Perm Jb",
+      "alg": "R U R' F' R U R' U' R' F R2 U' R'",
+      "trick": "El Perm J 'clásico'. El bloque resuelto atrás. Es como un T-Perm pero modificado al principio y al final."
+    },
+    {
+      "id": "PLL Na",
+      "name": "Perm Na",
+      "alg": "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'",
+      "trick": "Perm N. Intercambia esquinas en diagonal. Es el Jb (R U R' F'...) pero con un Sune (R U R' U...) al principio."
+    },
+    {
+      "id": "PLL Nb",
+      "name": "Perm Nb",
+      "alg": "R' U R U' R' F' U' F R U R' F R' F' R U' R",
+      "trick": "Perm N. El espejo del Na. Reconócelo por los 'faros' en diagonal."
+    },
+    {
+      "id": "PLL Ra",
+      "name": "Perm Ra",
+      "alg": "R U R' F' R U2 R' U2 R' F R U R U2 R'",
+      "trick": "Perm R. El bloque resuelto a la izquierda. Fíjate en el (R U2 R' U2 R' F R) en medio."
+    },
+    {
+      "id": "PLL Rb",
+      "name": "Perm Rb",
+      "alg": "R' U2 R U2 R' F R U R' U' R' F' R2",
+      "trick": "Perm R. El bloque resuelto a la derecha. Es el espejo del Ra. Termina con un Sledge y R2."
+    },
+    {
+      "id": "PLL T",
+      "name": "Perm T",
+      "alg": "R U R' U' R' F R2 U' R' U' R U R' F'",
+      "trick": "El T-Perm. Probablemente el PLL más satisfactorio. (Sexy Move) (R' F) (R2 U' R') (U' R U R' F')."
+    },
+    {
+      "id": "PLL Ua",
+      "name": "Perm Ua",
+      "alg": "M2' U M U2 M' U M2'",
+      "trick": "Perm U (horario). Las aristas rotan en el sentido de las agujas del reloj. (M2' U) (M U2) (M' U) (M2')."
+    },
+    {
+      "id": "PLL Ub",
+      "name": "Perm Ub",
+      "alg": "M2' U' M U2 M' U' M2'",
+      "trick": "Perm U (anti-horario). Las aristas rotan al revés. (M2' U') (M U2) (M' U') (M2')."
+    },
+    {
+      "id": "PLL V",
+      "name": "Perm V",
+      "alg": "R' U R' U' y R' F' R2 U' R' U R' F R F",
+      "trick": "Perm V. Intercambia esquinas adyacentes y aristas opuestas. La rotación 'y' es clave para ejecutarlo."
+    },
+    {
+      "id": "PLL Y",
+      "name": "Perm Y",
+      "alg": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+      "trick": "El Y-Perm. Intercambia esquinas adyacentes. Es un Sledge (F R U' R'...), luego un Sexy (U' R U R' F'), y un T-Perm modificado. ¡Un favorito!"
+    },
+    {
+      "id": "PLL Z",
+      "name": "Perm Z",
+      "alg": "M2' U M2' U M' U2 M2' U2 M'",
+      "trick": "El Perm Z. Intercambia aristas adyacentes. (M2' U) (M2' U) (M') (U2) (M2') (U2) (M'). Un poco más raro, pero rápido."
+    }
   ]
 }
