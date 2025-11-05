@@ -644,15 +644,21 @@
             document.querySelectorAll('.btn-tutorial').forEach(btn => btn.disabled = true);
 
             try {
+                // Esperar a que el custom element esté completamente "listo"
+                await customElements.whenDefined('twisty-player');
+                
                 // 1. Decir nombre
                 await speakPromise(`Este es un tutorial para ${name}.`);
 
                 // 2. Poner en posición (setup)
-                // Usamos `experimentalApplyAlg` para aplicar el setup sin animarlo
-                
                 // --- ¡¡¡AQUÍ ESTÁ LA CORRECCIÓN!!! ---
-                player.experimentalApplyAlg(setup);
-                // --- ANTES ERA: player.experimentalSetAlg(setup); ---
+                // `experimentalReset()` "destruye" el progreso y 
+                // "recrea" el cubo en el estado inicial, 
+                // que está definido por el atributo `setup`.
+                // Mi error anterior fue añadir `experimentalMove(setup)` después de esto.
+                await player.experimentalReset();
+                // ¡Eso es todo! El cubo ya está en la posición de setup.
+                // --- FIN DE LA CORRECCIÓN ---
                 
                 
                 // 3. Decir "Vamos"
