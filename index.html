@@ -624,23 +624,35 @@
             card.className = 'bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 flex flex-col';
             card.dataset.algId = alg.id;
 
-            const stickering = category.toUpperCase();
-            const setupHtml = alg.setup ? `setup="${alg.setup}"` : '';
+            // const stickering = category.toUpperCase(); // ELIMINADO
+            
+            // (¡CORREGIDO!) Usar `experimental-setup-alg` para el setup del JSON
+            const setupAlgHtml = alg.setup ? `experimental-setup-alg="${alg.setup}"` : '';
+            
+            // (NUEVO) Añadir rotación x2 para OLL/PLL para que el amarillo (default D) esté arriba
+            const cameraSetupHtml = (category === 'oll' || category === 'pll') ? `setup="x2"` : '';
+            
+            // --- (INICIO) NUEVO: Logs solicitados por el usuario ---
+            console.log(`Renderizando tarjeta para: ${alg.id}`);
+            console.log(`  alg: "${alg.alg}"`);
+            console.log(`  setupAlgHtml (experimental-setup-alg): "${setupAlgHtml}"`);
+            console.log(`  cameraSetupHtml (setup): "${cameraSetupHtml}"`);
+            // --- (FIN) NUEVO: Logs ---
+            
             const isLearned = learnedAlgs.includes(alg.id);
             const knowItBtnState = isLearned 
                 ? 'bg-green-600 text-white shadow-none' 
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600';
             const knowItIcon = isLearned ? ICON_CHECK : ICON_KNOW_IT;
             
+            // (ACTUALIZADO) Se quitaron los atributos del twisty-player
             card.innerHTML = `
                 <div class="w-full max-w-sm mx-auto mb-6">
                     <twisty-player
                         class="alg-player"
-                        ${setupHtml}
+                        ${setupAlgHtml}
+                        ${cameraSetupHtml}
                         alg="${alg.alg}"
-                        control-panel="normal" <!-- (ACTUALIZADO) -->
-                        experimental-stickering="${stickering}"
-                        background="none"
                     ></twisty-player>
                 </div>
                 
