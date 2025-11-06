@@ -1,119 +1,134 @@
 {
-   "f2l":[
-      {
-         "id":"F2L Básico 1",
-         "name":"Inserción Básica",
-         "alg":"U R U' R'",
-         "setup":"R U R' U'",
-         "trick":"El 'Sexy Move' de toda la vida. Rápido y fácil de hacer con la mano derecha. El par ya está hecho."
-      },
-      {
-         "id":"F2L Básico 2",
-         "name":"Inserción con F",
-         "alg":"U' F' U F",
-         "setup":"F' U' F U",
-         "trick":"Piensa en esto como un 'Sledgehammer' pero al revés (F' U F). Ideal para insertar sin rotar el cubo."
-      },
-      {
-         "id":"F2L Básico 3",
-         "name":"Unir Par (Blanco arriba)",
-         "alg":"R U R' U' R U R'",
-         "setup":"R U' R' U R U' R'",
-         "trick":"El blanco (o color de arriba) mira hacia arriba. Separa la esquina (R U R'), escóndela (U'), y vuelve a insertarla (R U R')."
-      }
-   ],
-   "oll":[
-      {
-         "id":"OLL 21",
-         "name":"H",
-         "alg":"R U2 R' U' R U R' U' R U' R'",
-         "trick":"El caso 'H'. Reconocible por los 'faros' en los lados opuestos. Intercambia esquinas."
-      },
-      {
-         "id":"OLL 22",
-         "name":"Pi",
-         "alg":"R U2' R2 U' R2 U' R2 U2' R",
-         "trick":"El 'Pi'. Reconocido por los dos bloques 1x2 ('faros') a los lados. Puro movimiento R y U."
-      },
-      {
-         "id":"OLL 23",
-         "name":"Pi",
-         "alg":"R2' U' R U' R' U2 R U' R' U R'",
-         "trick":"El espejo del 'Pi'. Los 'faros' están al frente y atrás. También puro R y U."
-      },
-      {
-         "id":"OLL 24",
-         "name":"T",
-         "alg":"R U R' U' R' F R F'",
-         "trick":"¡El T-Perm... pero para OLL! Es un Sexy Move (R U R' U') seguido de un Sledgehammer (R' F R F')."
-      },
-      {
-         "id":"OLL 25",
-         "name":"T",
-         "alg":"F R U' R' U R U R' F'",
-         "trick":"El 'Bruno'. El espejo del OLL 24. Empieza con F y fluye muy bien."
-      },
-      {
-         "id":"OLL 26",
-         "name":"Anti-Sune",
-         "alg":"R U2' R' U' R U' R'",
-         "trick":"El Anti-Sune. La esquina resuelta está al frente-izquierda. Fácil de 'spamear' y muy rápido."
-      },
-      {
-         "id":"OLL 27",
-         "name":"Sune",
-         "alg":"R U R' U R U2' R'",
-         "trick":"El Sune. El algoritmo más famoso. La esquina resuelta está al frente-derecha. Fluye solo."
-      }
-   ],
-   "pll":[
-      {
-         "id":"PLL Aa",
-         "name":"Perm Aa",
-         "alg":"x' R' U R' D2 R U' R' D2 R2 x",
-         "trick":"Perm A 'zurdo'. Busca el bloque 2x1x1 resuelto y ponlo atrás. La rotación x' ayuda a verlo. El D2 es clave."
-      },
-      {
-         "id":"PLL Ab",
-         "name":"Perm Ab",
-         "alg":"x R2 D2 R U R' D2 R U' R x'",
-         "trick":"Perm A 'diestro'. El bloque resuelto atrás. Es el espejo del Aa. (x R2 D2...)"
-      },
-      {
-         "id":"PLL H",
-         "name":"Perm H",
-         "alg":"M2' U M2' U2 M2' U M2'",
-         "trick":"El Perm H. Intercambia aristas opuestas. Súper rápido: (M2' U) (M2' U2) (M2' U) (M2'). ¡Puro 'slice'!"
-      },
-      {
-         "id":"PLL T",
-         "name":"Perm T",
-         "alg":"R U R' U' R' F R2 U' R' U' R U R' F'",
-         "trick":"El T-Perm. Probablemente el PLL más satisfactorio. Intercambia 2 esquinas y 2 aristas."
-      },
-      {
-         "id":"PLL Ua",
-         "name":"Perm Ua",
-         "alg":"M2' U M U2 M' U M2'",
-         "trick":"Perm U (horario). Las aristas rotan en el sentido de las agujas del reloj. (M2' U) (M U2) (M' U) (M2')."
-      },
-      {
-         "id":"PLL Ub",
-         "name":"Perm Ub",
-         "alg":"M2' U' M U2 M' U' M2'",
-         "trick":"Perm U (anti-horario). Las aristas rotan al revés. (M2' U') (M U2) (M' U') (M2')."
-      },
-      {
-         "id":"PLL Y",
-         "name":"Perm Y",
-         "alg":"F R U' R' U' R U R' F' R U R' U' R' F R F'",
-         "trick":"El Y-Perm. Intercambia esquinas adyacentes opuestas. ¡Un favorito!"
-      },
-      {
-         "id":"PLL Z",
-         "name":"Perm Z",
-         "alg":"M2' U M2' U M' U2 M2' U2 M'",
-         "trick":"El Perm Z. Intercambia aristas adyacentes. (M2' U) (M2' U) (M') (U2) (M2') (U2) (M')."
-      }
-   ]
+  "f2l": [
+    {
+      "id": "F2L Básico 1",
+      "name": "Inserción Básica",
+      "alg": "U R U' R'",
+      "setup": "F R U R' U' F'",
+      "trick": "El 'Sexy Move' de toda la vida. Rápido y fácil de hacer con la mano derecha. El par ya está hecho."
+    },
+    {
+      "id": "F2L Básico 2",
+      "name": "Inserción con F",
+      "alg": "U' F' U F",
+      "setup": "R U R' U'",
+      "trick": "Piensa en esto como un 'Sledgehammer' pero al revés (F' U F). Ideal para insertar sin rotar el cubo."
+    },
+    {
+      "id": "F2L Básico 3",
+      "name": "Unir Par (Blanco arriba)",
+      "alg": "R U R' U' R U R'",
+      "setup": "U R U' R' U'",
+      "trick": "El blanco (o color de arriba) mira hacia arriba. Separa la esquina (R U R'), escóndela (U'), y vuelve a insertarla (R U R')."
+    }
+  ],
+  "oll": [
+    {
+      "id": "OLL 21",
+      "name": "H",
+      "alg": "R U2 R' U' R U R' U' R U' R'",
+      "setup": "R U R' U'",
+      "trick": "El caso 'H'. Reconocible por los 'faros' en los lados opuestos. Intercambia esquinas."
+    },
+    {
+      "id": "OLL 22",
+      "name": "Pi",
+      "alg": "R U2' R2 U' R2 U' R2 U2' R",
+      "setup": "R U R' U' F",
+      "trick": "El 'Pi'. Reconocido por los dos bloques 1x2 ('faros') a los lados. Puro movimiento R y U."
+    },
+    {
+      "id": "OLL 23",
+      "name": "Pi",
+      "alg": "R2' U' R U' R' U2 R U' R' U R'",
+      "setup": "F R U R' U' F'",
+      "trick": "El espejo del 'Pi'. Los 'faros' están al frente y atrás. También puro R y U."
+    },
+    {
+      "id": "OLL 24",
+      "name": "T",
+      "alg": "R U R' U' R' F R F'",
+      "setup": "F R U R' U'",
+      "trick": "¡El T-Perm... pero para OLL! Es un Sexy Move (R U R' U') seguido de un Sledgehammer (R' F R F')."
+    },
+    {
+      "id": "OLL 25",
+      "name": "T",
+      "alg": "F R U' R' U R U R' F'",
+      "setup": "R' F R F'",
+      "trick": "El 'Bruno'. El espejo del OLL 24. Empieza con F y fluye muy bien."
+    },
+    {
+      "id": "OLL 26",
+      "name": "Anti-Sune",
+      "alg": "R U2' R' U' R U' R'",
+      "setup": "R U R' U' R U R' U'",
+      "trick": "El Anti-Sune. La esquina resuelta está al frente-izquierda. Fácil de 'spamear' y muy rápido."
+    },
+    {
+      "id": "OLL 27",
+      "name": "Sune",
+      "alg": "R U R' U R U2' R'",
+      "setup": "R U' R' U' R U' R'",
+      "trick": "El Sune. El algoritmo más famoso. La esquina resuelta está al frente-derecha. Fluye solo."
+    }
+  ],
+  "pll": [
+    {
+      "id": "PLL Aa",
+      "name": "Perm Aa",
+      "alg": "x' R' U R' D2 R U' R' D2 R2 x",
+      "setup": "x' R2 D2 R U R' D2 R U' R x",
+      "trick": "Perm A 'zurdo'. Busca el bloque 2x1x1 resuelto y ponlo atrás. La rotación x' ayuda a verlo. El D2 es clave."
+    },
+    {
+      "id": "PLL Ab",
+      "name": "Perm Ab",
+      "alg": "x R2 D2 R U R' D2 R U' R x'",
+      "setup": "x R' U R' D2 R U R' D2 R2 x'",
+      "trick": "Perm A 'diestro'. El bloque resuelto atrás. Es el espejo del Aa. (x R2 D2...)"
+    },
+    {
+      "id": "PLL H",
+      "name": "Perm H",
+      "alg": "M2' U M2' U2 M2' U M2'",
+      "setup": "M2' U' M2' U2 M2' U' M2'",
+      "trick": "El Perm H. Intercambia aristas opuestas. Súper rápido: (M2' U) (M2' U2) (M2' U) (M2'). ¡Puro 'slice'!"
+    },
+    {
+      "id": "PLL T",
+      "name": "Perm T",
+      "alg": "R U R' U' R' F R2 U' R' U' R U R' F'",
+      "setup": "F R U' R' U' R U R' F' R U R' U' R' F R2",
+      "trick": "El T-Perm. Probablemente el PLL más satisfactorio. Intercambia 2 esquinas y 2 aristas."
+    },
+    {
+      "id": "PLL Ua",
+      "name": "Perm Ua",
+      "alg": "M2' U M U2 M' U M2'",
+      "setup": "M2' U' M U2 M' U' M2'",
+      "trick": "Perm U (horario). Las aristas rotan en el sentido de las agujas del reloj. (M2' U) (M U2) (M' U) (M2')."
+    },
+    {
+      "id": "PLL Ub",
+      "name": "Perm Ub",
+      "alg": "M2' U' M U2 M' U' M2'",
+      "setup": "M2' U M U2 M' U M2'",
+      "trick": "Perm U (anti-horario). Las aristas rotan al revés. (M2' U') (M U2) (M' U') (M2')."
+    },
+    {
+      "id": "PLL Y",
+      "name": "Perm Y",
+      "alg": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+      "setup": "F R' F' R U R' U' R' F R U R U' R' F'",
+      "trick": "El Y-Perm. Intercambia esquinas adyacentes opuestas. ¡Un favorito!"
+    },
+    {
+      "id": "PLL Z",
+      "name": "Perm Z",
+      "alg": "M2' U M2' U M' U2 M2' U2 M'",
+      "setup": "M U2 M2' U2 M U M2' U' M2'",
+      "trick": "El Perm Z. Intercambia aristas adyacentes. (M2' U) (M2' U) (M') (U2) (M2') (U2) (M')."
+    }
+  ]
 }
