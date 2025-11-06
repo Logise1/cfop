@@ -87,7 +87,7 @@
             animation: scaleIn 0.3s ease-out;
         }
         
-        /* (NUEVO) Overlay para forzar modo horizontal en móvil en la vista de timer */
+        /* Overlay para forzar modo horizontal en móvil en la vista de timer */
         #mobile-orientation-overlay {
             display: none; /* Oculto por defecto */
         }
@@ -101,11 +101,16 @@
                 display: none;
             }
         }
+        
+        /* (NUEVO) Estilos para el Toggle de Dataset */
+        #dataset-toggle-btn.bg-cyan-500 #dataset-toggle-handle {
+            transform: translateX(1.5rem); /* 24px */
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans antialiased min-h-screen">
 
-    <!-- (NUEVO) MODAL DE ORIENTACIÓN -->
+    <!-- MODAL DE ORIENTACIÓN -->
     <div id="mobile-orientation-overlay" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50">
         <div class="text-center text-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24 mx-auto mb-4 animate-pulse">
@@ -116,7 +121,7 @@
         </div>
     </div>
 
-    <!-- 1. MODAL DE CONFIGURACIÓN INICIAL (Rediseñado) -->
+    <!-- 1. MODAL DE CONFIGURACIÓN INICIAL -->
     <div id="setup-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50 hidden modal-fade-in">
         <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center border border-gray-700 modal-scale-in">
             
@@ -125,7 +130,7 @@
                  <twisty-player
                     alg="R U R' U' R' F R F'"
                     setup="y'"
-                    control-panel="none" <!-- Mantenemos "none" en el modal de bienvenida -->
+                    control-panel="none"
                     visualization="2D"
                     experimental-stickering="PLL"
                     background="none"
@@ -182,6 +187,16 @@
 
         <!-- 4. VISTA: EXPLORAR TODO -->
         <main id="browse-view" class="hidden">
+            
+            <!-- (NUEVO) Switch Completo/Reducido -->
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <span id="label-reducido" class="font-semibold text-cyan-400 transition-colors">Reducido</span>
+                <button id="dataset-toggle-btn" class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors bg-gray-600 disabled:opacity-50" disabled>
+                    <span id="dataset-toggle-handle" class="inline-block w-4 h-4 transform transition-transform bg-white rounded-full translate-x-1"></span>
+                </button>
+                <span id="label-completo" class="font-semibold text-gray-500 transition-colors">Completo</span>
+            </div>
+            
             <!-- Navegación de Pestañas (Explorar) -->
             <nav class="flex justify-center gap-4 mb-8">
                 <button id="btn-browse-f2l" class="tab-btn-browse tab-btn-base" data-category="f2l">F2L</button>
@@ -195,14 +210,14 @@
             </div>
         </main>
         
-        <!-- 5. (NUEVO) VISTA: CRONÓMETRO -->
+        <!-- 5. VISTA: CRONÓMETRO -->
         <main id="timer-view" class="hidden">
             <div class="flex flex-col lg:flex-row gap-8">
                 
                 <!-- Columna Izquierda: Timer (ACTUALIZADA con áreas táctiles) -->
                 <div class="lg:w-3/5 w-full flex relative items-center justify-center bg-gray-800 rounded-2xl border border-gray-700 p-8" style="min-height: 400px; touch-action: none;">
                     
-                    <!-- (NUEVO) Áreas táctiles/click -->
+                    <!-- Áreas táctiles/click -->
                     <div id="btn-timer-left" class="absolute left-0 top-0 w-1/2 h-full cursor-pointer z-20"></div>
                     <div id="btn-timer-right" class="absolute right-0 top-0 w-1/2 h-full cursor-pointer z-20"></div>
                     
@@ -242,7 +257,8 @@
     <!-- Script principal de la aplicación -->
     <script type="module">
         // --- CONSTANTES ---
-        const JSON_URL = 'https://logise1.github.io/cfop/cfop.json';
+        const REDUCED_JSON_URL = 'https://logise1.github.io/cfop/cfop.json';
+        const FULL_JSON_URL = 'full.json'; // (NUEVO) Asumiendo que está en la misma ruta
         const LS_KEYS = {
             SETUP: 'cfop_user_setup_v3',
             ORDER: 'cfop_learn_order_v3',
@@ -274,23 +290,31 @@
         const browseLoading = document.getElementById('browse-loading');
         const browseTabs = document.querySelectorAll('.tab-btn-browse');
         const setupButtons = document.querySelectorAll('.setup-btn');
-        // (NUEVO) Refs del Timer
+        // Refs del Timer
         const timerDisplay = document.getElementById('timer-display');
         const solvesListContainer = document.getElementById('solves-list-container');
         const statsContainer = document.getElementById('stats-container');
         const deleteSolvesBtn = document.getElementById('delete-solves-btn');
         const btnTimerLeft = document.getElementById('btn-timer-left');
         const btnTimerRight = document.getElementById('btn-timer-right');
+        // (NUEVO) Refs del Toggle de Dataset
+        const datasetToggleBtn = document.getElementById('dataset-toggle-btn');
+        const datasetToggleHandle = document.getElementById('dataset-toggle-handle');
+        const labelReducido = document.getElementById('label-reducido');
+        const labelCompleto = document.getElementById('label-completo');
+
 
         // --- ESTADO DE LA APLICACIÓN ---
-        let allData = {};
+        let allData = {}; // "Reducido" - cfop.json
+        let fullData = null; // (NUEVO) "Completo" - full.json
+        let currentDataSet = 'reducido'; // (NUEVO)
         let totalAlgs = 0; 
         let userLearnOrder = [];
         let learnedAlgs = [];
         let currentBrowseCategory = 'f2l';
-        let currentView = 'daily'; // Para controlar los key listeners
+        let currentView = 'daily';
         
-        // (NUEVO) Estado del Timer
+        // Estado del Timer
         let timerInterval;
         let timerStartTime;
         let timerRunning = false;
@@ -312,18 +336,19 @@
          */
         async function fetchData() {
             try {
-                const response = await fetch(JSON_URL);
+                // (MODIFICADO) Cargar solo el JSON reducido al inicio
+                const response = await fetch(REDUCED_JSON_URL);
                 if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
                 allData = await response.json();
                 
-                // Calcular total de algoritmos
+                // Calcular total de algoritmos (del set reducido)
                 totalAlgs = (allData.f2l?.length || 0) + (allData.oll?.length || 0) + (allData.pll?.length || 0);
                 
                 // Una vez cargados los datos, revisa la configuración del usuario
                 checkUserSetup();
                 
             } catch (error) {
-                console.error('Error al cargar el JSON:', error);
+                console.error('Error al cargar cfop.json:', error);
                 dailyLoading.textContent = 'Error fatal al cargar algoritmos. Revisa la consola.';
                 browseLoading.textContent = 'Error fatal al cargar algoritmos. Revisa la consola.';
             }
@@ -340,7 +365,7 @@
             navBrowse.addEventListener('click', showBrowseView);
             navTimer.addEventListener('click', showTimerView); 
             
-            // (NUEVO) Listeners globales para el timer
+            // Listeners globales para el timer
             window.addEventListener('keydown', handleTimerKeydown);
             window.addEventListener('keyup', handleTimerKeyup);
 
@@ -388,7 +413,7 @@
          */
         function showDailyView() {
             currentView = 'daily';
-            document.body.classList.remove('timer-view-active'); // (NUEVO)
+            document.body.classList.remove('timer-view-active'); 
             dailyView.classList.remove('hidden');
             browseView.classList.add('hidden');
             timerView.classList.add('hidden');
@@ -409,7 +434,7 @@
          */
         function showBrowseView() {
             currentView = 'browse';
-            document.body.classList.remove('timer-view-active'); // (NUEVO)
+            document.body.classList.remove('timer-view-active'); 
             dailyView.classList.add('hidden');
             browseView.classList.remove('hidden');
             timerView.classList.add('hidden');
@@ -422,6 +447,11 @@
             navTimer.classList.remove('tab-btn-active');
             
             initBrowseView();
+            
+            // (NUEVO) Cargar 'full.json' si es la primera vez que se entra a explorar
+            if (fullData === null) {
+                fetchFullData();
+            }
         }
         
         /**
@@ -429,7 +459,7 @@
          */
         function showTimerView() {
             currentView = 'timer';
-            document.body.classList.add('timer-view-active'); // (NUEVO)
+            document.body.classList.add('timer-view-active'); 
             dailyView.classList.add('hidden');
             browseView.classList.add('hidden');
             timerView.classList.remove('hidden');
@@ -572,11 +602,76 @@
                 </div>
             `;
         }
+        
+        // --- (NUEVO) FUNCIONES PARA EL SET DE DATOS COMPLETO ---
+        
+        /**
+         * (NUEVO) Carga full.json en segundo plano
+         */
+        async function fetchFullData() {
+            try {
+                const response = await fetch(FULL_JSON_URL);
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                fullData = await response.json();
+                console.log("Datos completos (full.json) cargados.");
+                // Activar el botón de toggle
+                datasetToggleBtn.disabled = false;
+            } catch (error) {
+                console.error('Error al cargar full.json:', error);
+                // Desactivar el toggle si falla la carga
+                datasetToggleBtn.disabled = true;
+                labelCompleto.textContent = "Completo (Error)";
+                labelCompleto.classList.add('text-red-500');
+                labelCompleto.classList.remove('text-gray-500');
+            }
+        }
+        
+        /**
+         * (NUEVO) Maneja el click del interruptor
+         */
+        function toggleDataSet() {
+            if (fullData === null) {
+                console.warn("Se intentó cambiar a 'Completo' pero fullData no está cargado.");
+                return; // No hacer nada si fullData no se cargó
+            }
+
+            if (currentDataSet === 'reducido') {
+                currentDataSet = 'completo';
+                // Mover switch a 'completo'
+                datasetToggleBtn.classList.add('bg-cyan-500');
+                datasetToggleBtn.classList.remove('bg-gray-600');
+                datasetToggleHandle.classList.add('translate-x-6'); // 24px
+                labelReducido.classList.remove('text-cyan-400');
+                labelReducido.classList.add('text-gray-500');
+                labelCompleto.classList.add('text-cyan-400');
+                labelCompleto.classList.remove('text-gray-500');
+            } else {
+                currentDataSet = 'reducido';
+                // Mover switch a 'reducido'
+                datasetToggleBtn.classList.remove('bg-cyan-500');
+                datasetToggleBtn.classList.add('bg-gray-600');
+                datasetToggleHandle.classList.remove('translate-x-6');
+                labelReducido.classList.add('text-cyan-400');
+                labelReducido.classList.remove('text-gray-500');
+                labelCompleto.classList.remove('text-cyan-400');
+                labelCompleto.classList.add('text-gray-500');
+            }
+            
+            console.log("DataSet cambiado a:", currentDataSet);
+            
+            // VOLVER a renderizar la categoría actual con el nuevo set de datos
+            renderBrowseCategory(currentBrowseCategory);
+        }
 
         /**
          * 10. Inicializa la vista Explorar (Listeners de pestañas)
          */
         function initBrowseView() {
+            // (NUEVO) Listener para el toggle, solo se añade una vez
+            if (!datasetToggleBtn.onclick) {
+                datasetToggleBtn.onclick = toggleDataSet;
+            }
+            
             browseTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     currentBrowseCategory = tab.dataset.category;
@@ -602,7 +697,10 @@
             browseLoading.classList.add('hidden');
             browseContentContainer.innerHTML = ''; // Limpiar
             
-            const algs = allData[category];
+            // (NUEVO) Elegir el set de datos
+            const dataToRender = (currentDataSet === 'completo' && fullData) ? fullData : allData;
+            
+            const algs = dataToRender[category];
             if (!algs) {
                 browseLoading.textContent = `No se encontraron algoritmos para ${category}.`;
                 browseLoading.classList.remove('hidden');
@@ -617,27 +715,23 @@
 
         /**
          * 12. CREA LA TARJETA HTML para un algoritmo (Usado por ambas vistas)
-         * (ACTUALIZADO: Se AÑADIERON controles al visor)
          */
         function renderAlgCard(alg, category) {
             const card = document.createElement('div');
             card.className = 'bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 flex flex-col';
             card.dataset.algId = alg.id;
-
-            // const stickering = category.toUpperCase(); // ELIMINADO
             
-            // (¡CORREGIDO!) Usar `experimental-setup-alg` para el setup del JSON
+            // Usar `experimental-setup-alg` para el setup del JSON
             const setupAlgHtml = alg.setup ? `experimental-setup-alg="${alg.setup}"` : '';
             
-            // (NUEVO) Añadir rotación x2 para OLL/PLL para que el amarillo (default D) esté arriba
+            // Añadir rotación x2 para OLL/PLL para que el amarillo (default D) esté arriba
             const cameraSetupHtml = (category === 'oll' || category === 'pll') ? `setup="x2"` : '';
             
-            // --- (INICIO) NUEVO: Logs solicitados por el usuario ---
+            // --- Logs solicitados por el usuario ---
             console.log(`Renderizando tarjeta para: ${alg.id}`);
             console.log(`  alg: "${alg.alg}"`);
             console.log(`  setupAlgHtml (experimental-setup-alg): "${setupAlgHtml}"`);
             console.log(`  cameraSetupHtml (setup): "${cameraSetupHtml}"`);
-            // --- (FIN) NUEVO: Logs ---
             
             const isLearned = learnedAlgs.includes(alg.id);
             const knowItBtnState = isLearned 
@@ -667,13 +761,19 @@
                     <button class="btn-know-it tab-btn-base ${knowItBtnState}" ${isLearned ? 'disabled' : ''}>
                         ${knowItIcon}
                     </button>
-                    <!-- Botón de tutorial eliminado -->
                 </div>
             `;
             
             // Añadir Listeners
             const knowItButton = card.querySelector('.btn-know-it');
-            knowItButton.addEventListener('click', () => markAsLearned(alg.id, knowItButton));
+            // (MODIFICADO) No se puede marcar como aprendido un alg del set 'completo' si no está en el 'reducido'
+            // Ocultar botón si el alg no es parte del set de aprendizaje (allData)
+            const algIsInLearningSet = allData[category]?.some(a => a.id === alg.id);
+            if (!algIsInLearningSet) {
+                knowItButton.classList.add('hidden');
+            } else {
+                knowItButton.addEventListener('click', () => markAsLearned(alg.id, knowItButton));
+            }
             
             return card;
         }
@@ -697,7 +797,7 @@
             updateDashboard();
         }
 
-        // === (NUEVO) SECCIÓN DEL CRONÓMETRO (LÓGICA ACTUALIZADA) ===
+        // === SECCIÓN DEL CRONÓMETRO ===
 
         /**
          * 14. Inicializa la vista del Cronómetro
@@ -710,14 +810,12 @@
             timerDisplay.classList.remove('text-green-500', 'text-cyan-400');
             timerDisplay.classList.add('text-gray-100');
             
-            // (NUEVO) Listeners para los pulsadores táctiles/mouse
-            // Mousedown/Touchstart
+            // Listeners para los pulsadores táctiles/mouse
             btnTimerLeft.addEventListener('mousedown', () => onThumbDown('left'));
             btnTimerLeft.addEventListener('touchstart', (e) => { e.preventDefault(); onThumbDown('left'); });
             btnTimerRight.addEventListener('mousedown', () => onThumbDown('right'));
             btnTimerRight.addEventListener('touchstart', (e) => { e.preventDefault(); onThumbDown('right'); });
             
-            // Mouseup/Touchend
             btnTimerLeft.addEventListener('mouseup', () => onThumbUp('left'));
             btnTimerLeft.addEventListener('touchend', (e) => { e.preventDefault(); onThumbUp('left'); });
             btnTimerRight.addEventListener('mouseup', () => onThumbUp('right'));
@@ -730,14 +828,12 @@
         function handleTimerKeydown(e) {
             if (currentView !== 'timer') return; // Solo funciona en la vista de timer
             
-            // Si el timer está corriendo, CUALQUIER tecla lo para
             if (timerRunning) {
                 e.preventDefault();
                 stopTimer();
                 return; 
             } 
             
-            // Si es la barra espaciadora
             if (e.code === 'Space' && !timerRunning) {
                 e.preventDefault();
                 onThumbDown('space'); // Usar el handler unificado
@@ -750,7 +846,6 @@
         function handleTimerKeyup(e) {
             if (currentView !== 'timer') return;
             
-            // Si es la barra espaciadora
             if (e.code === 'Space') {
                 e.preventDefault();
                 onThumbUp('space'); // Usar el handler unificado
@@ -758,7 +853,7 @@
         }
         
         /**
-         * (NUEVO) Handler unificado para "botón presionado"
+         * 17. Handler unificado para "botón presionado"
          */
         function onThumbDown(side) {
             if (side === 'left') leftThumbDown = true;
@@ -768,26 +863,23 @@
                 rightThumbDown = true;
             }
 
-            // Si el timer está corriendo, parar inmediatamente
             if (timerRunning) {
                 stopTimer();
                 return;
             }
             
-            // Si ambos están presionados y no está listo, ponerlo listo
             if (leftThumbDown && rightThumbDown && !timerReady) {
                 prepareTimer();
             }
         }
         
         /**
-         * (NUEVO) Handler unificado para "botón soltado"
+         * 18. Handler unificado para "botón soltado"
          */
         function onThumbUp(side) {
-            // Si el timer estaba listo (verde), empezar
             if (timerReady) {
                 startTimer();
-                timerReady = false; // El timer ya no está listo, está corriendo
+                timerReady = false; 
             }
             
             if (side === 'left') leftThumbDown = false;
@@ -799,7 +891,7 @@
         }
 
         /**
-         * 17. Pone el timer en estado "listo" (verde)
+         * 19. Pone el timer en estado "listo" (verde)
          */
         function prepareTimer() {
             timerReady = true;
@@ -809,7 +901,7 @@
         }
 
         /**
-         * 18. Inicia el conteo del timer
+         * 20. Inicia el conteo del timer
          */
         function startTimer() {
             timerReady = false;
@@ -819,20 +911,19 @@
             timerDisplay.classList.add('text-cyan-400');
             timerDisplay.classList.remove('text-gray-100', 'text-green-500');
 
-            // Bucle de actualización
             timerInterval = setInterval(() => {
                 const elapsedTime = (Date.now() - timerStartTime) / 1000;
                 timerDisplay.textContent = elapsedTime.toFixed(2);
-            }, 10); // Actualiza cada 10ms (centésimas)
+            }, 10); 
         }
 
         /**
-         * 19. Detiene el timer y guarda el tiempo
+         * 21. Detiene el timer y guarda el tiempo
          */
         function stopTimer() {
             clearInterval(timerInterval);
             timerRunning = false;
-            timerReady = false; // (NUEVO) Resetea estados
+            timerReady = false; 
             leftThumbDown = false;
             rightThumbDown = false;
             
@@ -845,14 +936,14 @@
         }
 
         /**
-         * 20. Carga los tiempos desde localStorage
+         * 22. Carga los tiempos desde localStorage
          */
         function loadSolves() {
             solvesList = JSON.parse(localStorage.getItem(LS_KEYS.SOLVES) || '[]');
         }
 
         /**
-         * 21. Añade un tiempo a la lista y la guarda
+         * 23. Añade un tiempo a la lista y la guarda
          */
         function addSolve(time) {
             solvesList.push(time);
@@ -861,7 +952,7 @@
         }
 
         /**
-         * 22. Borra todos los tiempos
+         * 24. Borra todos los tiempos
          */
         function deleteAllSolves() {
             solvesList = [];
@@ -870,7 +961,7 @@
         }
         
         /**
-         * 23. Renderiza la lista de tiempos y las estadísticas
+         * 25. Renderiza la lista de tiempos y las estadísticas
          */
         function renderStats() {
             // Renderizar lista de tiempos
@@ -903,7 +994,7 @@
         }
         
         /**
-         * 24. Helper para calcular media (Ao5, Ao12)
+         * 26. Helper para calcular media (Ao5, Ao12)
          */
         function calculateAverage(n) {
             if (solvesList.length < n) return 'N/A';
@@ -925,7 +1016,7 @@
         }
         
         /**
-         * 25. Helper para renderizar una tarjeta de estadística
+         * 27. Helper para renderizar una tarjeta de estadística
          */
         function renderStatCard(label, value) {
             return `
