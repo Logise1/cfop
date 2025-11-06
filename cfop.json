@@ -1,127 +1,127 @@
 {
   "f2l": [
     {
-      "id": "f2l-1",
-      "name": "Par Básico (Separados)",
-      "setup": "R U R'",
+      "id": "F2L_1",
+      "name": "Inserción básica",
       "alg": "U R U' R'",
-      "trick": "Esquina blanca arriba, arista al lado. Colores de lado coinciden. Insertar simple."
+      "setup": "Coloca la esquina blanca arriba y la arista correspondiente en la capa superior.",
+      "trick": "Mira la esquina blanca y su arista; si están en la misma capa, con un U puedes alinearlas y luego insertarlas con R U' R'."
     },
     {
-      "id": "f2l-2",
-      "name": "Par Básico (Juntos, mal)",
-      "setup": "R U' R' U R U' R'",
-      "alg": "R U' R' U y (R' U' R)",
-      "trick": "Esquina y arista juntas en el top, pero la esquina está mal orientada (blanco al lado)."
+      "id": "F2L_2",
+      "name": "Separar y unir pareja",
+      "alg": "U R U' R' U' F' U F",
+      "setup": "Ambas piezas están mal emparejadas en la capa superior.",
+      "trick": "Usa R U' R' para sacarlas, y F' U F para unirlas correctamente antes de insertarlas."
     },
     {
-      "id": "f2l-3",
-      "name": "Par en Slot (Mal Orientado)",
-      "setup": "R U' R' U' R U R'",
-      "alg": "R U' R' U2 R U' R'",
-      "trick": "El par está en el slot correcto pero orientado incorrectamente. Esto lo saca y lo resuelve."
+      "id": "F2L_3",
+      "name": "Pareja invertida",
+      "alg": "R U2 R' U' R U R'",
+      "setup": "La arista está encima de su esquina, pero orientada al revés.",
+      "trick": "Haz un U o U' hasta que el color lateral coincida y luego usa R U2 R' para separarlas antes de insertarlas."
     },
     {
-      "id": "f2l-4",
-      "name": "Caso \"Hammerhead\"",
-      "setup": "R' U R U2 R' U' R",
-      "alg": "y' R' U R U' R' U' R",
-      "trick": "Esquina en slot, blanco mira al frente. Arista en el top. Se \"juntan\" en el backslot."
+      "id": "F2L_4",
+      "name": "Caso en diagonal",
+      "alg": "U' L' U L U L' U' L",
+      "setup": "La esquina y arista están diagonalmente opuestas en la capa superior.",
+      "trick": "Haz U' para alinearlas y usa el algoritmo espejo por la izquierda."
     }
   ],
   "oll": [
     {
-      "id": "oll-dot",
-      "name": "OLL - Punto",
-      "setup": "(R U R' U') (R U' R' F') (R U R' U') (R' F R)",
-      "alg": "F (R U R' U') F' U F (R U R' U') F'",
-      "trick": "No hay aristas amarillas orientadas. Este setup deja solo el punto (F2L resuelto)."
+      "id": "OLL_1",
+      "name": "L shape (L amarilla)",
+      "alg": "F U R U' R' F'",
+      "setup": "Haz una cruz amarilla incompleta con forma de L.",
+      "trick": "Coloca la L en la esquina superior izquierda antes de aplicar el algoritmo."
     },
     {
-      "id": "oll-l",
-      "name": "OLL - \"L\"",
-      "setup": "F R U R' U' F'",
-      "alg": "f (R U R' U') f'",
-      "trick": "Forma de \"L\" a las 9 y 12. El setup es el alg del punto."
+      "id": "OLL_2",
+      "name": "Línea amarilla",
+      "alg": "F R U R' U' F'",
+      "setup": "Cruz amarilla en línea horizontal.",
+      "trick": "Hazlo con la línea horizontal al frente."
     },
     {
-      "id": "oll-line",
-      "name": "OLL - Línea",
-      "setup": "f (R U R' U') f'",
-      "alg": "F (R U R' U') F'",
-      "trick": "Línea horizontal. El setup es el alg de la \"L\"."
+      "id": "OLL_3",
+      "name": "Pequeña L (orientar esquinas 1)",
+      "alg": "R U2 R2 U' R2 U' R2 U2 R",
+      "setup": "La cruz amarilla ya está hecha.",
+      "trick": "Si solo una esquina amarilla apunta arriba, ponla al frente izquierda."
     },
     {
-      "id": "oll-sune",
-      "name": "OLL - Sune",
-      "setup": "R U2 R' U' R U' R'",
+      "id": "OLL_4",
+      "name": "Pequeña L (orientar esquinas 2)",
+      "alg": "R2 D R' U2 R D' R' U2 R'",
+      "setup": "Cruz amarilla hecha; dos esquinas necesitan orientación.",
+      "trick": "Hazlo dos veces si es necesario para completar la cara amarilla."
+    },
+    {
+      "id": "OLL_5",
+      "name": "Cara amarilla completa",
+      "alg": "",
+      "setup": "Todas las piezas amarillas hacia arriba.",
+      "trick": "Paso completado: no es necesario aplicar ningún algoritmo."
+    },
+    {
+      "id": "OLL_6",
+      "name": "Ojos (Fish shape)",
       "alg": "R U R' U R U2 R'",
-      "trick": "Cruz hecha. Una esquina amarilla te mira (frontal-derecha). \"Pez\" que mira abajo-izquierda."
+      "setup": "Cruz amarilla hecha, forma de pez (‘Sune’).",
+      "trick": "El ‘ojo’ debe estar arriba a la izquierda."
     },
     {
-      "id": "oll-antisune",
-      "name": "OLL - Anti-Sune",
-      "setup": "R U R' U R U2 R'",
+      "id": "OLL_7",
+      "name": "Anti-Fish (Anti-Sune)",
       "alg": "R U2 R' U' R U' R'",
-      "trick": "Cruz hecha. Una esquina amarilla te mira (frontal-izquierda). \"Pez\" que mira abajo-derecha."
-    },
-    {
-      "id": "oll-h",
-      "name": "OLL - \"H\" (Faros Dobles)",
-      "setup": "R U2 R' U' (R U R' U') (R U' R')",
-      "alg": "R U R' U R U' R' U R U2 R'",
-      "trick": "Cruz hecha. Dos esquinas opuestas miran arriba. \"Faros\" a los lados."
-    },
-    {
-      "id": "oll-pi",
-      "name": "OLL - \"Pi\" (Faros)",
-      "setup": "R' F R U R' U' F' U R",
-      "alg": "R U2 (R2 U' R2 U') R2 U2 R",
-      "trick": "Cruz hecha. Dos esquinas adyacentes miran arriba. \"Faros\" al frente."
+      "setup": "Cruz amarilla hecha, forma invertida de pez.",
+      "trick": "El ‘ojo’ va arriba a la derecha."
     }
   ],
   "pll": [
     {
-      "id": "pll-Aa",
-      "name": "PLL - Perm A (Aa)",
-      "setup": "x R2 D2 (R U R') D2 (R U' R)",
-      "alg": "x (R' U R') D2 (R U' R') D2 R2",
-      "trick": "2-Look: Se usa para permutar 3 esquinas. Busca 1 par de \"faros\" (esquinas resueltas)."
+      "id": "PLL_1",
+      "name": "A-Perm (esquinas)",
+      "alg": "x' R U' R D2 R' U R D2 R2 x",
+      "setup": "Cara amarilla completa.",
+      "trick": "Mira las esquinas: tres se mueven en círculo y una queda fija."
     },
     {
-      "id": "pll-E",
-      "name": "PLL - Perm E",
-      "setup": "x' (R U' R' D) (R U R' D') (R U R' D) (R U' R' D')",
-      "alg": "x' (R U' R' D) (R U R' D') (R U R' D) (R U' R' D')",
-      "trick": "2-Look: Intercambia 2 pares de esquinas opuestas. (El setup es el mismo alg)."
+      "id": "PLL_2",
+      "name": "U-Perm (aristas)",
+      "alg": "R2 U R U R' U' R' U' R' U R'",
+      "setup": "Cruz amarilla completa y esquinas bien orientadas.",
+      "trick": "Encuentra el bloque 1x2 y ponlo atrás izquierda."
     },
     {
-      "id": "pll-Ua",
-      "name": "PLL - Perm Ua",
-      "setup": "M2 U' M U2 M' U' M2",
-      "alg": "M2 U M U2 M' U M2",
-      "trick": "Esquinas resueltas. Intercambia 3 aristas en forma de U (horario)."
+      "id": "PLL_3",
+      "name": "Ua-Perm",
+      "alg": "R U' R U R U R U' R' U' R2",
+      "setup": "Aristas desplazadas en sentido horario.",
+      "trick": "El bloque 1x2 va atrás derecha."
     },
     {
-      "id": "pll-Ub",
-      "name": "PLL - Perm Ub",
-      "setup": "M2 U M U2 M' U M2",
-      "alg": "M2 U' M U2 M' U' M2",
-      "trick": "Esquinas resueltas. Intercambia 3 aristas en forma de U (anti-horario)."
+      "id": "PLL_4",
+      "name": "Ub-Perm",
+      "alg": "R2 U' R' U' R U R U R U' R",
+      "setup": "Aristas desplazadas en sentido antihorario.",
+      "trick": "El bloque 1x2 va atrás izquierda."
     },
     {
-      "id": "pll-H",
-      "name": "PLL - Perm H",
-      "setup": "M2 U M2 U2 M2 U M2",
+      "id": "PLL_5",
+      "name": "Z-Perm",
+      "alg": "M2 U M2 U M' U2 M2 U2 M' U2",
+      "setup": "Aristas opuestas intercambiadas.",
+      "trick": "Se reconocen porque no hay bloques 1x2 y dos aristas opuestas están cambiadas."
+    },
+    {
+      "id": "PLL_6",
+      "name": "H-Perm",
       "alg": "M2 U M2 U2 M2 U M2",
-      "trick": "Esquinas resueltas. Intercambia 4 aristas (opuestas). (El setup es el mismo alg)."
-    },
-    {
-      "id": "pll-Z",
-      "name": "PLL - Perm Z",
-      "setup": "M2 U' M2 U' M' U2 M2 U2 M'",
-      "alg": "M2 U M2 U M' U2 M2 U2 M'",
-      "trick": "Esquinas resueltas. Intercambia 4 aristas (adyacentes)."
+      "setup": "Solo aristas intercambiadas.",
+      "trick": "Reconocible porque ninguna esquina ni bloque coincide."
     }
   ]
 }
